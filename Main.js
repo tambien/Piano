@@ -10,7 +10,7 @@ var piano = new Piano().toMaster()
 piano.load('./Salamander/Salamander.mp3').then(()=>{
 	//make the button active on load
 	let button = document.querySelector('button')
-	button.classList = 'active'
+	button.classList.add('active')
 })
 
 /**
