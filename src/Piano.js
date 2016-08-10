@@ -83,17 +83,17 @@ export default class Piano extends Tone{
 
 	/**
 	 *  Play a note.
-	 *  @param  {String}  note      The note to play
+	 *  @param  {String|Number}  note      The note to play
 	 *  @param  {Number}  velocity  The velocity to play the note
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyDown(note, velocity, time){
+	keyDown(note, velocity=0.8, time=undefined){
 		if (this._loaded){
 			time = this.toSeconds(time)
 
 			if (this.isString(note)){
-				note = Frequency(note).toMidi()
+				note = Math.round(Frequency(note).toMidi())
 			}
 
 			if (!this._heldNotes.has(note)){
@@ -106,16 +106,16 @@ export default class Piano extends Tone{
 
 	/**
 	 *  Release a held note.
-	 *  @param  {String}  note      The note to play
+	 *  @param  {String|Number}  note      The note to stop
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyUp(note, time){
+	keyUp(note, time=undefined){
 		if (this._loaded){
 			time = this.toSeconds(time)
 
 			if (this.isString(note)){
-				note = Frequency(note).toMidi()
+				note = Math.round(Frequency(note).toMidi())
 			}
 
 			if (this._heldNotes.has(note)){
