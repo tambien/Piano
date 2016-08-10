@@ -92,6 +92,10 @@ export default class Piano extends Tone{
 		if (this._loaded){
 			time = this.toSeconds(time)
 
+			if (this.isString(note)){
+				note = Frequency(note).toMidi()
+			}
+
 			if (!this._heldNotes.has(note)){
 				let key = this._notes.start(note, velocity, time)
 				this._heldNotes.set(note, key)
@@ -109,6 +113,10 @@ export default class Piano extends Tone{
 	keyUp(note, time){
 		if (this._loaded){
 			time = this.toSeconds(time)
+
+			if (this.isString(note)){
+				note = Frequency(note).toMidi()
+			}
 
 			if (this._heldNotes.has(note)){
 
