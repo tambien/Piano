@@ -1,0 +1,23 @@
+{
+  "name": "piano",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/Main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "author": "Yotam Mann",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.11.4",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "exports-loader": "^0.6.3",
+    "file-loader": "*",
+    "html-loader": "*",
+    "midiconvert": "^0.3.0",
+    "raw-loader": "*",
+    "url-loader": "*",
+    "webpack": "*"
+  }
+}

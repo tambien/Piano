@@ -1,0 +1,5 @@
+*.wav
+
+node_modules
+
+.jshintrc
