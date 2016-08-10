@@ -5,7 +5,7 @@ const PROD = JSON.parse(process.env.PROD_ENV || '0')
 module.exports = {
 	context: __dirname,
 	entry: {
-		Main: 'Main',
+		Main: ['babel-polyfill', 'Main'],
 		// Piano : 'Piano'
 	},
 	output: {
