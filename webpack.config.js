@@ -1,20 +1,25 @@
 const webpack = require('webpack');
 
+const PROD = JSON.parse(process.env.PROD_ENV || '0')
+
 module.exports = {
 	context: __dirname,
 	entry: {
-		Main: 'src/Main',
+		Main: 'Main',
+		// Piano : 'Piano'
 	},
 	output: {
 		filename: './build/[name].js',
 		chunkFilename: './build/[id].js',
 		sourceMapFilename : '[file].map',
+		// library : 'Piano',
+		// libraryTarget : 'umd'
 	},
 	resolve: {
 		root: __dirname,
 		modulesDirectories : ['node_modules', '../Tonejs/Tone.js/', 'src'],
 	},
-	// plugins: [new webpack.optimize.UglifyJsPlugin({minimize: true})],
+	plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({minimize: true})] : [],
 	module: {
 		loaders: [
 			{
@@ -27,5 +32,5 @@ module.exports = {
 			}
 		]
 	},
-	devtool : '#eval-source-map'
+	devtool : PROD ? '#eval-source-map' : '#none'
 };
