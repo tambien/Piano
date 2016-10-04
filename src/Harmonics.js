@@ -9,10 +9,8 @@ export default class Harmonics extends PianoBase {
 
 	start(note, gain, time){
 		if (Salamander.hasHarmonics(note)){
-			let source = Salamander.newSource().connect(this.output)
-			let {timing, rate} = Salamander.getHarmonics(note)
-			source.playbackRate.value = rate
-			source.start(time, timing.start, timing.duration, gain, 0)
+			let source = Salamander.getHarmonics(note).connect(this.output)
+			source.start(time, 0, undefined, gain, 0)
 		}
 	}
 }

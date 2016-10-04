@@ -5,9 +5,7 @@ export default class Release extends PianoBase {
 	
 	start(note, time){
 
-		let source = Salamander.newSource().connect(this.output)
-		let {timing, rate} = Salamander.getRelease(note)
-		source.playbackRate.value = rate
-		source.start(time, timing.start, timing.duration, 0.01, 0)
+		let source = Salamander.getRelease(note).connect(this.output)
+		source.start(time, 0, undefined, 0.01, 0)
 	}
 }

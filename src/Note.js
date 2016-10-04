@@ -6,23 +6,21 @@ import PianoBase from './PianoBase'
  *  Internal class
  */
 class Note extends Tone{
-	constructor(time, timing, rate, velocity, gain){
-		super(0, 0)
+	constructor(time, source, velocity, gain){
+		super()
 		//round the velocity
 		this._velocity = velocity
 		this._startTime = time
-		this._timing = timing
 
-		this.output = Salamander.newSource()
-		this.output.playbackRate.value = rate
-		this.output.start(time, timing.start, timing.duration, gain, 0)
+		this.output = source
+		this.output.start(time, 0, undefined, gain, 0)
 	}
 
 	stop(time){
 		if (this.output.buffer){
 
 			// return the amplitude of the damper playback
-			let progress = (time - this._startTime) / this._timing.duration
+			let progress = (time - this._startTime) / this.output.buffer.duration
 			progress = (1 - progress) * this._velocity
 			// stop the buffer
 			this.output.stop(time, 0.2)
@@ -46,9 +44,9 @@ export default class Strings extends PianoBase {
 		let diff = roundedVel - velPos
 		let gain = 1 - diff * 0.5
 
-		let {timing, rate} = Salamander.getNote(note, roundedVel)
+		let source = Salamander.getNote(note, roundedVel)
 
-		let retNote = new Note(time, timing, rate, velocity, gain).connect(this.output)
+		let retNote = new Note(time, source, velocity, gain).connect(this.output)
 
 		return retNote
 	}

@@ -148,7 +148,7 @@ export default class Piano extends Tone{
 	 *  @return {Piano} this
 	 *  @example
 	 * //either as an string
-	 * piano.setVolume('keybed', -10)
+	 * piano.setVolume('release', -10)
 	 */
 	setVolume(param, vol){
 		switch(param){
