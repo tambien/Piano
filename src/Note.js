@@ -44,10 +44,14 @@ export default class Strings extends PianoBase {
 		let diff = roundedVel - velPos
 		let gain = 1 - diff * 0.5
 
-		let source = Salamander.getNote(note, roundedVel)
+		if (Salamander.hasNote(note, roundedVel)){
+			let source = Salamander.getNote(note, roundedVel)
 
-		let retNote = new Note(time, source, velocity, gain).connect(this.output)
+			let retNote = new Note(time, source, velocity, gain).connect(this.output)
 
-		return retNote
+			return retNote
+		} else {
+			return null
+		}
 	}
 }

@@ -98,7 +98,9 @@ export default class Piano extends Tone{
 
 			if (!this._heldNotes.has(note)){
 				let key = this._notes.start(note, velocity, time)
-				this._heldNotes.set(note, key)
+				if (key){
+					this._heldNotes.set(note, key)
+				}
 			}
 		}
 		return this
