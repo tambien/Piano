@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 
-const PROD = JSON.parse(process.env.PROD_ENV || '0')
+var PROD = process.argv.indexOf('-p') !== -1
 
 module.exports = {
 	context: __dirname,
@@ -17,14 +17,14 @@ module.exports = {
 	},
 	resolve: {
 		root: __dirname,
-		modulesDirectories : ['node_modules', '../Tonejs/Tone.js/', 'src'],
+		modulesDirectories : ['node_modules', 'node_modules/tone', 'src'],
 	},
 	plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({minimize: true})] : [],
 	module: {
 		loaders: [
 			{
 				test: /\.js$/,
-				exclude: /(node_modules|Tone\.js)/,
+				exclude: /(node_modules)/,
 				loader: 'babel',
 				query: {
 				  presets: ['es2015']
@@ -32,5 +32,5 @@ module.exports = {
 			}
 		]
 	},
-	devtool : PROD ? '#eval-source-map' : '#none'
+	devtool : PROD ? '' : '#eval-source-map'
 };
