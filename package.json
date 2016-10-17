@@ -11,14 +11,15 @@
   "dependencies": {
     "babel-core": "^6.11.4",
     "babel-loader": "^6.2.4",
+    "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.9.0",
     "exports-loader": "^0.6.3",
     "file-loader": "*",
     "html-loader": "*",
-    "midiconvert": "^0.3.0",
+    "midiconvert": "^0.4.0",
     "raw-loader": "*",
+    "tone": "^0.8.0",
     "url-loader": "*",
-    "webpack": "*",
-    "babel-polyfill": "^6.13.0"
+    "webpack": "*"
   }
 }

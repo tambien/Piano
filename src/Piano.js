@@ -13,7 +13,7 @@ import Salamander from './Salamander'
  */
 export default class Piano extends Tone{
 
-	constructor(){
+	constructor(range=[21, 108], velocities=1, release=true){
 
 		super(0, 1)
 
@@ -23,13 +23,15 @@ export default class Piano extends Tone{
 
 		this._sustainedNotes = new Map()
 
+		this._notes = new Note(range, velocities).connect(this.output)
+
 		this._pedal = new Pedal().connect(this.output)
 
-		this._notes = new Note().connect(this.output)
-
-		this._harmonics = new Harmonics().connect(this.output)
-
-		this._release = new Release().connect(this.output)
+		if (release){
+			this._harmonics = new Harmonics(range).connect(this.output)
+			
+			this._release = new Release(range).connect(this.output)
+		}
 	}
 
 	/**
@@ -38,7 +40,14 @@ export default class Piano extends Tone{
 	 *  @return  {Promise}
 	 */
 	load(url){
-		return Salamander.load(url).then(() => {
+		const promises = [this._notes.load(url), this._pedal.load(url)]
+		if (this._harmonics){
+			promises.push(this._harmonics.load(url))
+		}
+		if (this._release){
+			promises.push(this._release.load(url))	
+		}
+		return Promise.all(promises).then(() => {
 			this._loaded = true
 		})
 	}
@@ -88,7 +97,7 @@ export default class Piano extends Tone{
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyDown(note, velocity=0.8, time=undefined){
+	keyDown(note, velocity=0.8, time=Tone.now()){
 		if (this._loaded){
 			time = this.toSeconds(time)
 
@@ -98,7 +107,9 @@ export default class Piano extends Tone{
 
 			if (!this._heldNotes.has(note)){
 				let key = this._notes.start(note, velocity, time)
-				this._heldNotes.set(note, key)
+				if (key){
+					this._heldNotes.set(note, key)
+				}
 			}
 		}
 		return this
@@ -110,7 +121,7 @@ export default class Piano extends Tone{
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyUp(note, time=undefined){
+	keyUp(note, time=Tone.now()){
 		if (this._loaded){
 			time = this.toSeconds(time)
 
@@ -123,7 +134,9 @@ export default class Piano extends Tone{
 				let key = this._heldNotes.get(note)
 				this._heldNotes.delete(note)
 
-				this._release.start(note, time)
+				if (this._release){
+					this._release.start(note, time)
+				}
 
 				if (this._pedal.isDown(time)){
 					let notes = []
@@ -134,7 +147,9 @@ export default class Piano extends Tone{
 					this._sustainedNotes.set(note, notes)
 				} else {
 					let dampenGain = key.stop(time)
-					this._harmonics.start(note, dampenGain, time)
+					if (this._harmonics){
+						this._harmonics.start(note, dampenGain, time)
+					}
 				}
 			}
 		}
@@ -148,7 +163,7 @@ export default class Piano extends Tone{
 	 *  @return {Piano} this
 	 *  @example
 	 * //either as an string
-	 * piano.setVolume('keybed', -10)
+	 * piano.setVolume('release', -10)
 	 */
 	setVolume(param, vol){
 		switch(param){
@@ -159,11 +174,16 @@ export default class Piano extends Tone{
 				this._pedal.volume = vol
 				break
 			case 'release':
-				this._release.volume = vol
+				if (this._release){
+					this._release.volume = vol
+				}
 				break
 			case 'harmonics':
-				this._harmonics.volume = vol
+				if (this._harmonics){
+					this._harmonics.volume = vol
+				}
 				break
 		}
+		return this
 	}
 }

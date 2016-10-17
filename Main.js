@@ -5,9 +5,9 @@ import MidiConvert from 'midiconvert'
 import Part from 'Tone/event/Part'
 import Transport from 'Tone/core/Transport'
 
-var piano = new Piano().toMaster()
+var piano = new Piano([21, 108], 5).toMaster()
 
-piano.load('./Salamander/Salamander.mp3').then(()=>{
+piano.load('./Salamander/').then(()=>{
 	//make the button active on load
 	let button = document.querySelector('button')
 	button.classList.add('active')
@@ -27,13 +27,14 @@ Buffer.on('load', (prog) => {
 /**
  *  MIDI FILE
  */
-MidiConvert.load('clair_de_lune.mid', (midi) => {
+MidiConvert.load('clair_de_lune.mid').then((midi) => {
 
 	function playNote(time, event){
 		piano.keyDown(event.note, event.velocity, time).keyUp(event.note, time + event.duration)
 	}
 
-	Transport.set(midi.transport)
+	Transport.bpm.value = midi.bpm
+	Transport.timeSignature = midi.timeSignature
 
 	//schedule the pedal
 	let sustain = new Part((time, event) => {
@@ -42,7 +43,7 @@ MidiConvert.load('clair_de_lune.mid', (midi) => {
 		} else {
 			piano.pedalUp(time)
 		}
-	}, midi.tracks[0].sustain).start(0)
+	}, midi.tracks[0].controlChanges[64]).start(0)
 
 	let noteOffEvents = new Part((time, event) => {
 		piano.keyUp(event.midi, time)
