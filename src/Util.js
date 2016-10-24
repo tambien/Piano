@@ -7,7 +7,7 @@ function noteToMidi(note){
 }
 
 function midiToNote(midi){
-	return Frequency(midi, 'midi').toNote()
+	return Frequency(midi, 'midi').toNote().replace('#', 's')
 }
 
 function midiToFrequencyRatio(midi){
