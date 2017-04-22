@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/Main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "build": "webpack"
   },
   "author": "Yotam Mann",
   "license": "MIT",
