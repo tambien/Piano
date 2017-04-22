@@ -1,5 +1,4 @@
-import Tone from 'Tone/core/Tone'
-import Master from 'Tone/core/Master'
+import Tone, { Master } from 'tone'
 
 export default class PianoBase extends Tone {
 	constructor(vol=0){
