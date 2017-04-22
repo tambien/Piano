@@ -22,6 +22,6 @@
     "midiconvert": "^0.4.0",
     "raw-loader": "*",
     "url-loader": "*",
-    "webpack": "*"
+    "webpack": "1.*"
   }
 }
