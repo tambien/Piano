@@ -22,7 +22,7 @@ class Note extends Tone{
 		if (this.output.buffer){
 
 			// return the amplitude of the damper playback
-			let progress = (time - this._startTime) / this.output.buffer.duration
+			let progress = Math.min(1, (time - this._startTime) / this.output.buffer.duration)
 			progress = (1 - progress) * this._velocity
 			// stop the buffer
 			this.output.stop(time, 0.2)
