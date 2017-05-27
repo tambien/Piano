@@ -1,8 +1,7 @@
-import Tone from 'Tone/core/Tone'
+import Tone, { Buffers } from 'tone'
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
 import {noteToMidi, createSource, midiToFrequencyRatio} from './Util'
-import Buffers from 'Tone/core/Buffers'
 
 /**
  *  Internal class

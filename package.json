@@ -2,13 +2,16 @@
   "name": "piano",
   "version": "1.0.0",
   "description": "",
-  "main": "build/Main.js",
+  "main": "build/Piano.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "build": "webpack"
   },
   "author": "Yotam Mann",
   "license": "MIT",
   "dependencies": {
+    "tone": "^0.8.0"
+  },
+  "devDependencies": {
     "babel-core": "^6.11.4",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.13.0",
@@ -18,8 +21,7 @@
     "html-loader": "*",
     "midiconvert": "^0.4.0",
     "raw-loader": "*",
-    "tone": "^0.8.0",
     "url-loader": "*",
-    "webpack": "*"
+    "webpack": "1.*"
   }
 }

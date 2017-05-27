@@ -1,6 +1,4 @@
-import Tone from 'Tone/core/Tone'
-import Frequency from 'Tone/type/Frequency'
-import BufferSource from 'Tone/source/BufferSource'
+import Tone, { Frequency, BufferSource } from 'tone'
 
 function noteToMidi(note){
 	return Frequency(note).toMidi()

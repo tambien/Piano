@@ -1,9 +1,6 @@
-import Piano from 'Piano'
-import Master from 'Tone/core/Master'
-import Buffer from 'Tone/core/Buffer'
+import Piano from './Piano'
+import { Buffer, Master, Part, Transport } from 'tone'
 import MidiConvert from 'midiconvert'
-import Part from 'Tone/event/Part'
-import Transport from 'Tone/core/Transport'
 
 var piano = new Piano([21, 108], 5).toMaster()
 

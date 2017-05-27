@@ -1,7 +1,7 @@
 import PianoBase from './PianoBase'
 import Salamander from './Salamander'
 import {createSource} from './Util'
-import Buffers from 'Tone/core/Buffers'
+import { Buffers } from 'tone'
 
 export default class Pedal extends PianoBase {
 	constructor(){
