@@ -1,7 +1,7 @@
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
 import {createSource} from './Util'
-import Buffers from 'Tone/core/Buffers'
+import { Buffers } from 'tone'
 
 export default class Release extends PianoBase {
 

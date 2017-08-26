@@ -1,8 +1,7 @@
-import Tone from 'Tone/core/Tone'
+import Tone, { Buffers } from 'tone'
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
 import {noteToMidi, createSource, midiToFrequencyRatio} from './Util'
-import Buffers from 'Tone/core/Buffers'
 
 /**
  *  Internal class
@@ -22,7 +21,7 @@ class Note extends Tone{
 		if (this.output.buffer){
 
 			// return the amplitude of the damper playback
-			let progress = (time - this._startTime) / this.output.buffer.duration
+			let progress = Math.min(1, (time - this._startTime) / this.output.buffer.duration)
 			progress = (1 - progress) * this._velocity
 			// stop the buffer
 			this.output.stop(time, 0.2)

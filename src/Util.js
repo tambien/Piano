@@ -1,13 +1,11 @@
-import Tone from 'Tone/core/Tone'
-import Frequency from 'Tone/type/Frequency'
-import BufferSource from 'Tone/source/BufferSource'
+import Tone, { Frequency, BufferSource } from 'tone'
 
 function noteToMidi(note){
 	return Frequency(note).toMidi()
 }
 
 function midiToNote(midi){
-	return Frequency(midi, 'midi').toNote()
+	return Frequency(midi, 'midi').toNote().replace('#', 's')
 }
 
 function midiToFrequencyRatio(midi){

@@ -1,6 +1,4 @@
-import Gain from 'Tone/core/Gain'
-import Tone from 'Tone/core/Tone'
-import Frequency from 'Tone/type/Frequency'
+import Tone, { Gain, Frequency } from 'tone'
 import Pedal from './Pedal'
 import Note from './Note'
 import Harmonics from './Harmonics'
