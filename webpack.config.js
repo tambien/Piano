@@ -1,6 +1,5 @@
 const webpack = require('webpack');
-
-var PROD = process.argv.indexOf('-p') !== -1
+const path = require('path')
 
 module.exports = [{
 	context: __dirname + '/src',
@@ -10,20 +9,20 @@ module.exports = [{
 		chunkFilename: './build/[id].js',
 		sourceMapFilename : '[file].map',
 	},
-	plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({minimize: true})] : [],
-	module: {
-		loaders: [
-			{
-				test: /\.js$/,
-				exclude: /(node_modules)/,
-				loader: 'babel',
-				query: {
-				  presets: ['es2015']
-				}
-			}
-		]
+	resolve : {
+		modules : ['node_modules']
 	},
-	devtool : PROD ? '' : '#eval-source-map'
+	module: {
+		loaders: [{
+			test: /\.js$/,
+			exclude: /(node_modules)|Tone\.js/,
+			loader: 'babel-loader',
+			query: {
+				presets: ['es2015']
+			}
+		}]
+	},
+	devtool : '#source-map'
 }, {
 	context: __dirname + '/src',
 	entry: {Piano: './Piano'},
@@ -34,19 +33,19 @@ module.exports = [{
 		library: 'Piano',
 		libraryTarget: 'umd',
 	},
-	plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({minimize: true})] : [],
-	module: {
-		loaders: [
-			{
-				test: /\.js$/,
-				exclude: /(node_modules)/,
-				loader: 'babel',
-				query: {
-				  presets: ['es2015']
-				}
-			}
-		]
+	resolve : {
+		modules : ['node_modules']
 	},
-  externals: ['tone'],
-	devtool : PROD ? '' : '#eval-source-map'
-}];
+	module: {
+		loaders: [{
+			test: /\.js$/,
+			exclude: /(node_modules)|Tone\.js/,
+			loader: 'babel-loader',
+			query: {
+				presets: ['es2015']
+			}
+		}]
+	},
+	externals: ['tone'],
+	devtool : '#source-map'
+}]
