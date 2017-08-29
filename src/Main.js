@@ -6,7 +6,7 @@ import events from 'events'
 
 var piano = new Piano([21, 108], 5).toMaster()
 
-piano.load('./Salamander/').then(()=>{
+piano.load('https://tambien.github.io/Piano/Salamander/').then(()=>{
 	//make the button active on load
 	let button = document.querySelector('button')
 	button.classList.add('active')
