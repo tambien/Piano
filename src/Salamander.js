@@ -7,10 +7,10 @@ export default {
 	},
 
 	getHarmonicsUrl(midi){
-		return `harmL${encodeURIComponent(midiToNote(midi).replace('#', 's'))}.mp3`
+		return `harmL${midiToNote(midi).replace('#', 's')}.mp3`
 	},
 
 	getNotesUrl(midi, vel){
-		return `${encodeURIComponent(midiToNote(midi).replace('#', 's'))}v${vel}.mp3`
+		return `${midiToNote(midi).replace('#', 's')}v${vel}.mp3`
 	}
 }
