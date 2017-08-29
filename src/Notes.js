@@ -1,37 +1,7 @@
-import Tone, { Buffers } from 'tone'
+import Tone, { Buffers , MultiSampler} from 'tone'
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
-import {noteToMidi, createSource, midiToFrequencyRatio} from './Util'
-
-/**
- *  Internal class
- */
-class Note extends Tone{
-	constructor(time, source, velocity, gain){
-		super()
-		//round the velocity
-		this._velocity = velocity
-		this._startTime = time
-
-		this.output = source
-		this.output.start(time, 0, undefined, gain, 0)
-	}
-
-	stop(time){
-		if (this.output.buffer){
-
-			// return the amplitude of the damper playback
-			let progress = Math.min(1, (time - this._startTime) / this.output.buffer.duration)
-			progress = (1 - progress) * this._velocity
-			// stop the buffer
-			this.output.stop(time, 0.2)
-
-			return Math.pow(progress, 0.5)
-		} else {
-			return 0
-		}
-	}
-}
+import {noteToMidi, createSource, midiToNote, midiToFrequencyRatio} from './Util'
 
 /**
  * Maps velocity depths to Salamander velocities
@@ -60,7 +30,7 @@ const notes = [21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 6
 /**
  *  Manages all of the hammered string sounds
  */
-export default class Strings extends PianoBase {
+export class Notes extends PianoBase {
 
 	constructor(range=[21, 108], velocities=1){
 		super()
@@ -71,50 +41,64 @@ export default class Strings extends PianoBase {
 
 		const slicedNotes = notes.slice(lowerIndex, upperIndex)
 
-		this._buffers = velocitiesMap[velocities].slice()
+		this._samplers = velocitiesMap[velocities].slice()
 
-		this._buffers.forEach((vel, i) => {
-			this._buffers[i] = {}
+		this._activeNotes = new Map()
+
+		this._samplers.forEach((vel, i) => {
+			this._samplers[i] = {}
 			slicedNotes.forEach((note) => {
-				this._buffers[i][note] = Salamander.getNotesUrl(note, vel)
+				this._samplers[i][note] = Salamander.getNotesUrl(note, vel)
 			})
 		})
 	}
 
 	_hasNote(note, velocity){
-		return this._buffers.hasOwnProperty(velocity) && this._buffers[velocity].has(note)
+		return this._samplers.hasOwnProperty(velocity) && this._samplers[velocity].has(note)
 	}
 
 	_getNote(note, velocity){
-		return this._buffers[velocity].get(note)
+		return this._samplers[velocity].get(note)
 	}
 
-	start(note, velocity, time){
+	stop(note, time, velocity){
+		//stop all of the currently playing note
+		if (this._activeNotes.has(note)){
+			this._activeNotes.get(note).forEach(source => {
+				const release = 0.25
+				source.stop(time + release, release)
+			})
+			this._activeNotes.delete(note)
+		}
+	}
 
-		let velPos = velocity * (this._buffers.length - 1)
-		let roundedVel = Math.round(velPos)
-		let diff = roundedVel - velPos
-		let gain = 1 - diff * 0.5
+	start(note, time, velocity){
+
+		const velPos = velocity * (this._samplers.length - 1)
+		const roundedVel = Math.round(velPos)
+		const diff = roundedVel - velPos
+		const gain = 1 - diff * 0.5
 
 		let [midi, ratio] = midiToFrequencyRatio(note)
 
 		if (this._hasNote(midi, roundedVel)){
-			let source = createSource(this._getNote(midi, roundedVel))
+			const source = createSource(this._getNote(midi, roundedVel))
 			source.playbackRate.value = ratio
+			source.connect(this.output)
+			source.start(time, 0, undefined, gain, 0)
 
-			let retNote = new Note(time, source, velocity, gain).connect(this.output)
-
-			return retNote
-		} else {
-			return null
+			if (!this._activeNotes.has(note)){
+				this._activeNotes.set(note, [])
+			}
+			this._activeNotes.get(note).push(source)
 		}
 	}
 
 	load(baseUrl){
 		const promises = []
-		this._buffers.forEach((obj, i) => {
+		this._samplers.forEach((obj, i) => {
 			let prom = new Promise((success) => {
-				this._buffers[i] = new Buffers(obj, success, baseUrl)
+				this._samplers[i] = new Buffers(obj, success, baseUrl)
 			})
 			promises.push(prom)
 		})

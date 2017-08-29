@@ -1,15 +1,16 @@
-import Tone, { Master } from 'tone'
+import Tone, {AudioNode} from 'tone'
 
-export default class PianoBase extends Tone {
-	constructor(vol=0){
-		super(0, 1)
+export default class PianoBase extends AudioNode {
+	constructor(vol = 0) {
+		super()
+		this.createInsOuts(0, 1)
 
 		this.volume = vol
 	}
-	get volume(){
-		return this.gainToDb(this.output.gain.value)
+	get volume() {
+		return Tone.gainToDb(this.output.gain.value)
 	}
-	set volume(vol){
-		this.output.gain.value = this.dbToGain(vol)
+	set volume(vol) {
+		this.output.gain.value = Tone.dbToGain(vol)
 	}
 }

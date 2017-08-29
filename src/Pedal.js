@@ -1,7 +1,7 @@
 import PianoBase from './PianoBase'
 import Salamander from './Salamander'
-import {createSource} from './Util'
-import { Buffers } from 'tone'
+import {createSource, randomBetween} from './Util'
+import Tone, {Buffers} from 'tone'
 
 export default class Pedal extends PianoBase {
 	constructor(){
@@ -15,7 +15,7 @@ export default class Pedal extends PianoBase {
 	}
 
 	load(baseUrl){
-		return new Promise((success) => {			
+		return new Promise((success) => {
 			this._buffers = new Buffers({
 				up : 'pedalU1.mp3',
 				down : 'pedalD1.mp3'
@@ -35,7 +35,7 @@ export default class Pedal extends PianoBase {
 
 	_playSample(time, dir){
 		this._currentSound = createSource(this._buffers.get(dir))
-		this._currentSound.connect(this.output).start(time, 0, undefined, 0.2)
+		this._currentSound.connect(this.output).start(time, randomBetween(0, 0.1), undefined, 0.2 * randomBetween(0.5, 1), 0.05)
 	}
 
 	down(time){

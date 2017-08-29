@@ -1,6 +1,6 @@
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
-import {createSource} from './Util'
+import {createSource, randomBetween} from './Util'
 import { Buffers } from 'tone'
 
 export default class Release extends PianoBase {
@@ -19,11 +19,13 @@ export default class Release extends PianoBase {
 			this._buffers = new Buffers(this._buffers, success, baseUrl)
 		})
 	}
-	
-	start(note, time){
+
+	start(note, time, velocity){
 		if (this._buffers.has(note)){
 			let source = createSource(this._buffers.get(note)).connect(this.output)
-			source.start(time, 0, undefined, 0.01, 0)
+			//randomize the velocity slightly
+			velocity *= randomBetween(0.5, 1)
+			source.start(time, 0, undefined, 0.01 * velocity, 0)
 		}
 	}
 }
