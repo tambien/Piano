@@ -1,6 +1,8 @@
-import Piano from './Piano'
-import { Buffer, Master, Part, Transport } from 'tone'
+import {Piano} from './Piano'
+import Tone, { Buffer, Master, Part, Transport } from 'tone'
 import MidiConvert from 'midiconvert'
+import WebMidi from 'webmidi'
+import events from 'events'
 
 var piano = new Piano([21, 108], 5).toMaster()
 
@@ -43,13 +45,13 @@ MidiConvert.load('clair_de_lune.mid').then((midi) => {
 	}, midi.tracks[0].controlChanges[64]).start(0)
 
 	let noteOffEvents = new Part((time, event) => {
-		piano.keyUp(event.midi, time)
+		piano.keyUp(event.midi, time, event.velocity)
 	}, midi.tracks[0].noteOffs).start(0)
-	
+
 	let noteOnEvents = new Part((time, event) => {
-		piano.keyDown(event.midi, event.velocity, time)
+		piano.keyDown(event.midi, time, event.velocity)
 	}, midi.tracks[0].notes).start(0)
-	
+
 })
 
 /**
@@ -76,30 +78,64 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 
-/**
- *  MIDI INPUT
- */
-function parseInput(message){
-	let note;
-	if (message[0] === 176 && message[1] == 64){
-		if (message[2] > 0){
-			piano.pedalDown()
-		} else {
-			piano.pedalUp()
+class Midi extends events.EventEmitter{
+	constructor(){
+		super()
+
+		this._isEnabled = false
+
+		WebMidi.enable((err) => {
+			if (!err){
+				this._isEnabled = true
+				if (WebMidi.inputs){
+					WebMidi.inputs.forEach((input) => this._bindInput(input))
+				}
+				WebMidi.addListener('connected', (device) => {
+					if (device.input){
+						this._bindInput(device.input)
+					}
+				})
+			}
+		})
+	}
+
+	_bindInput(inputDevice){
+		if (this._isEnabled){
+			WebMidi.addListener('disconnected', (device) => {
+				if (device.input){
+					device.input.removeListener('noteOn')
+					device.input.removeListener('noteOff')
+				}
+			})
+			inputDevice.addListener('noteon', 'all', (event) => {
+                this.emit('keyDown', event.note.number, event.velocity)
+			})
+			inputDevice.addListener('noteoff', 'all',  (event) => {
+                this.emit('keyUp', event.note.number, event.velocity)
+			})
+
+			inputDevice.addListener('controlchange', "all", (event) => {
+				if (event.controller.name === 'holdpedal'){
+					this.emit(event.value ? 'pedalDown' : 'pedalUp')
+				}
+			})
 		}
-	} else if (message[0] === 128){ //noteOff
-		piano.keyUp(message[1])
-	} else if (message[0] === 144){ //noteOn
-		piano.keyDown(message[1], message[2] / 127)
 	}
 }
 
-if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess().then((midiAccess) => {
-    	midiAccess.inputs.forEach((input) => {
-    		input.addEventListener('midimessage', (e) => {
-    			parseInput(e.data)
-    		})
-    	});
-    });
-}
+const midi = new Midi()
+midi.on('keyDown', (note, velocity) => {
+	piano.keyDown(note, Tone.now(), velocity)
+})
+
+midi.on('keyUp', (note, velocity) => {
+	piano.keyUp(note, Tone.now(), velocity)
+})
+
+midi.on('pedalDown', () => {
+	piano.pedalDown()
+})
+
+midi.on('pedalUp', () => {
+	piano.pedalUp()
+})

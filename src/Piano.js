@@ -1,6 +1,6 @@
-import Tone, { Gain, Frequency } from 'tone'
+import Tone, { Gain, Frequency, AudioNode} from 'tone'
 import Pedal from './Pedal'
-import Note from './Note'
+import {Notes} from './Notes'
 import Harmonics from './Harmonics'
 import Release from './Release'
 import Salamander from './Salamander'
@@ -9,11 +9,18 @@ import Salamander from './Salamander'
  *  @class Multisampled Grand Piano using [Salamander Piano Samples](https://archive.org/details/SalamanderGrandPianoV3)
  *  @extends {Tone}
  */
-export default class Piano extends Tone{
+export class Piano extends AudioNode {
 
-	constructor(range=[21, 108], velocities=1, release=true){
+	constructor(){
 
-		super(0, 1)
+		const options = Tone.defaults(arguments, ["range", "velocities"], {
+			velocities : 1,
+			range : [21, 108],
+			release : true
+		});
+
+		super()
+		this.createInsOuts(0, 1)
 
 		this._loaded = false
 
@@ -21,14 +28,14 @@ export default class Piano extends Tone{
 
 		this._sustainedNotes = new Map()
 
-		this._notes = new Note(range, velocities).connect(this.output)
+		this._notes = new Notes(options.range, options.velocities).connect(this.output)
 
 		this._pedal = new Pedal().connect(this.output)
 
-		if (release){
-			this._harmonics = new Harmonics(range).connect(this.output)
-			
-			this._release = new Release(range).connect(this.output)
+		if (options.release){
+			this._harmonics = new Harmonics(options.range).connect(this.output)
+
+			this._release = new Release(options.range).connect(this.output)
 		}
 	}
 
@@ -43,11 +50,20 @@ export default class Piano extends Tone{
 			promises.push(this._harmonics.load(url))
 		}
 		if (this._release){
-			promises.push(this._release.load(url))	
+			promises.push(this._release.load(url))
 		}
 		return Promise.all(promises).then(() => {
 			this._loaded = true
 		})
+	}
+
+	/**
+	 * If all the samples are loaded or not
+	 * @readOnly
+	 * @type {Boolean}
+	 */
+	get loaded(){
+		return this._loaded
 	}
 
 	/**
@@ -57,7 +73,7 @@ export default class Piano extends Tone{
 	 *  @returns {Piano} this
 	 */
 	pedalDown(time){
-		if (this._loaded){
+		if (this.loaded){
 			time = this.toSeconds(time)
 			if (!this._pedal.isDown(time)){
 				this._pedal.down(time)
@@ -72,15 +88,15 @@ export default class Piano extends Tone{
 	 *  @returns {Piano} this
 	 */
 	pedalUp(time){
-		if (this._loaded){
+		if (this.loaded){
 			time = this.toSeconds(time)
 			if (this._pedal.isDown(time)){
 				this._pedal.up(time)
 				// dampen each of the notes
-				this._sustainedNotes.forEach((notes) => {
-					notes.forEach((note) => {
-						note.stop(time)
-					})
+				this._sustainedNotes.forEach((t, note) => {
+					if (!this._heldNotes.has(note)){
+						this._notes.stop(note, time)
+					}
 				})
 				this._sustainedNotes.clear()
 			}
@@ -90,24 +106,25 @@ export default class Piano extends Tone{
 
 	/**
 	 *  Play a note.
-	 *  @param  {String|Number}  note      The note to play
-	 *  @param  {Number}  velocity  The velocity to play the note
+	 *  @param  {String|Number}  note      The note to play. If it is a number, it is assumed
+	 *                                     to be MIDI
+	 *  @param  {NormalRange}  velocity  The velocity to play the note
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyDown(note, velocity=0.8, time=Tone.now()){
-		if (this._loaded){
+	keyDown(note, time=Tone.now(), velocity=0.8){
+		if (this.loaded){
 			time = this.toSeconds(time)
 
-			if (this.isString(note)){
+			if (Tone.isString(note)){
 				note = Math.round(Frequency(note).toMidi())
 			}
 
 			if (!this._heldNotes.has(note)){
-				let key = this._notes.start(note, velocity, time)
-				if (key){
-					this._heldNotes.set(note, key)
-				}
+				//record the start time and velocity
+				this._heldNotes.set(note, {time, velocity})
+
+				this._notes.start(note, time, velocity)
 			}
 		}
 		return this
@@ -119,34 +136,38 @@ export default class Piano extends Tone{
 	 *  @param  {Time}  time      The time of the event
 	 *  @return  {Piano}  this
 	 */
-	keyUp(note, time=Tone.now()){
-		if (this._loaded){
+	keyUp(note, time=Tone.now(), velocity=0.8){
+		if (this.loaded){
 			time = this.toSeconds(time)
 
-			if (this.isString(note)){
+			if (Tone.isString(note)){
 				note = Math.round(Frequency(note).toMidi())
 			}
 
 			if (this._heldNotes.has(note)){
 
-				let key = this._heldNotes.get(note)
+				const prevNote = this._heldNotes.get(note)
 				this._heldNotes.delete(note)
 
 				if (this._release){
-					this._release.start(note, time)
+					this._release.start(note, time, velocity)
 				}
 
+				//compute the release velocity
+				const holdTime = time - prevNote.time
+				const prevVel = prevNote.velocity
+				let dampenGain = (0.5/Math.max(holdTime, 0.1)) + prevVel + velocity
+				dampenGain = Math.pow(Math.log(Math.max(dampenGain, 1)), 2) / 2
+
 				if (this._pedal.isDown(time)){
-					let notes = []
-					if (this._sustainedNotes.has(note)){
-						notes = this._sustainedNotes.get(note)
+					if (!this._sustainedNotes.has(note)){
+						this._sustainedNotes.set(note, time)
 					}
-					notes.push(key)
-					this._sustainedNotes.set(note, notes)
 				} else {
-					let dampenGain = key.stop(time)
+					this._notes.stop(note, time, velocity)
+
 					if (this._harmonics){
-						this._harmonics.start(note, dampenGain, time)
+						this._harmonics.start(note, time, dampenGain)
 					}
 				}
 			}
