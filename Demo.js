@@ -1,12 +1,13 @@
 import {Piano} from './src/Piano'
 import Tone, { Buffer, Master, Part, Transport } from 'tone'
+Tone.context.lookAhead = 0
 import MidiConvert from 'midiconvert'
 import WebMidi from 'webmidi'
 import events from 'events'
 
 var piano = new Piano([21, 108], 5).toMaster()
 
-piano.load('https://tambien.github.io/Piano/Salamander/').then(()=>{
+piano.load().then(()=>{
 	//make the button active on load
 	let button = document.querySelector('button')
 	button.classList.add('active')
