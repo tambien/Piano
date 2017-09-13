@@ -25,7 +25,7 @@ export default class Release extends PianoBase {
 			let source = createSource(this._buffers.get(note)).connect(this.output)
 			//randomize the velocity slightly
 			velocity *= randomBetween(0.5, 1)
-			source.start(time, 0, undefined, 0.01 * velocity, 0)
+			source.start(time, 0, undefined, 0.02 * velocity, 0)
 		}
 	}
 }
