@@ -2,8 +2,8 @@ const webpack = require('webpack');
 const path = require('path')
 
 module.exports = [{
-	context: __dirname + '/src',
-	entry: {Main: ['babel-polyfill', './Main']},
+	context: __dirname,
+	entry: {Demo: ['babel-polyfill', './Demo']},
 	output: {
 		filename: './build/[name].js',
 		chunkFilename: './build/[id].js',
