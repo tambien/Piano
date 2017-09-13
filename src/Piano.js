@@ -44,7 +44,7 @@ export class Piano extends AudioNode {
 	 *  @param  {String}  baseUrl  The url for the Salamander base folder
 	 *  @return  {Promise}
 	 */
-	load(url){
+	load(url='https://tambien.github.io/Piano/Salamander/'){
 		const promises = [this._notes.load(url), this._pedal.load(url)]
 		if (this._harmonics){
 			promises.push(this._harmonics.load(url))
