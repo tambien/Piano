@@ -11,6 +11,7 @@ piano.load().then(()=>{
 	//make the button active on load
 	let button = document.querySelector('button')
 	button.classList.add('active')
+	document.querySelector('#loading').remove()
 })
 
 /**
@@ -18,10 +19,6 @@ piano.load().then(()=>{
  */
 Buffer.on('progress', (prog) => {
 	document.querySelector('#loading #fill').style.width = (prog * 100).toString() + '%'
-})
-
-Buffer.on('load', (prog) => {
-	document.querySelector('#loading').remove()
 })
 
 /**
