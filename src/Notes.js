@@ -77,7 +77,11 @@ export class Notes extends PianoBase {
 		const velPos = velocity * (this._samplers.length - 1)
 		const roundedVel = Math.round(velPos)
 		const diff = roundedVel - velPos
-		const gain = 1 - diff * 0.5
+		let gain = 1 - diff * 0.5
+
+		if (this._samplers.length === 1){
+			gain = velocity
+		}
 
 		let [midi, ratio] = midiToFrequencyRatio(note)
 
