@@ -35,6 +35,7 @@ export default class Pedal extends PianoBase {
 
 	_playSample(time, dir){
 		this._currentSound = createSource(this._buffers.get(dir))
+		this._currentSound.curve = 'exponential'
 		this._currentSound.connect(this.output).start(time, randomBetween(0, 0.01), undefined, 0.5 * randomBetween(0.5, 1), 0.05)
 	}
 

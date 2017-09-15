@@ -65,7 +65,7 @@ export class Notes extends PianoBase {
 		//stop all of the currently playing note
 		if (this._activeNotes.has(note)){
 			this._activeNotes.get(note).forEach(source => {
-				const release = 0.25
+				const release = 1
 				source.stop(time + release, release)
 			})
 			this._activeNotes.delete(note)
@@ -85,6 +85,7 @@ export class Notes extends PianoBase {
 			const source = createSource(this._getNote(midi, roundedVel))
 			source.playbackRate.value = ratio
 			source.connect(this.output)
+			source.curve = 'exponential'
 			source.start(time, 0, undefined, gain, 0)
 
 			if (!this._activeNotes.has(note)){
