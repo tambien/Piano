@@ -1,11 +1,11 @@
 {
   "name": "tone-piano",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "",
   "main": "build/Piano.js",
   "scripts": {
     "build": "webpack -p",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "author": "Yotam Mann",
   "license": "MIT",
