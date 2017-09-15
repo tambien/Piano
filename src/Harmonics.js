@@ -25,7 +25,10 @@ export default class Harmonics extends PianoBase {
 	}
 
 	start(note, time, velocity){
-		this._sampler.triggerAttack(midiToNote(note), time, velocity * randomBetween(0.5, 1))
+		//make sure it's a valid range
+		if (note >= harmonics[0] && note <= harmonics[harmonics.length-1]){
+			this._sampler.triggerAttack(midiToNote(note), time, velocity * randomBetween(0.5, 1))
+		}
 	}
 
 	load(baseUrl){
