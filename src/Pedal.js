@@ -28,7 +28,7 @@ export default class Pedal extends PianoBase {
 	 */
 	_squash(time){
 		if (this._currentSound){
-			this._currentSound.stop(time, 0.1)
+			this._currentSound.stop(time+0.1, 0.1)
 		}
 		this._currentSound = null
 	}
