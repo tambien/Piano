@@ -205,4 +205,10 @@ export class Piano extends AudioNode {
 		}
 		return this
 	}
+
+	stopAll(){
+		this._heldNotes.forEach((value, note) => {
+			this.keyUp(note)
+		})
+	}
 }
