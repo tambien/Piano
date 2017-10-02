@@ -13,7 +13,7 @@ export class Piano extends AudioNode {
 
 	constructor(){
 
-		const options = Tone.defaults(arguments, ["range", "velocities"], {
+		const options = Tone.defaults(arguments, ["range", "velocities", "release"], {
 			velocities : 1,
 			range : [21, 108],
 			release : true
