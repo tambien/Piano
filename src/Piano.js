@@ -1,4 +1,4 @@
-import Tone, { Gain, Frequency, AudioNode} from 'tone'
+import Tone, { Gain, Frequency, AudioNode, Buffer} from 'tone'
 import Pedal from './Pedal'
 import {Notes} from './Notes'
 import Harmonics from './Harmonics'
@@ -211,5 +211,15 @@ export class Piano extends AudioNode {
 		this._heldNotes.forEach((value, note) => {
 			this.keyUp(note)
 		})
+		return this
+	}
+
+	/**
+	 * Callback to invoke with normalized progress
+	 * @param  {Function} cb
+	 */
+	progress(cb){
+		Buffer.on('progress', cb)
+		return this
 	}
 }
