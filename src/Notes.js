@@ -1,21 +1,21 @@
-import Tone, { Buffers , MultiSampler} from 'tone'
+import Tone, { Buffers, MultiSampler } from 'tone'
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
-import {noteToMidi, createSource, midiToNote, midiToFrequencyRatio} from './Util'
+import { noteToMidi, createSource, midiToNote, midiToFrequencyRatio } from './Util'
 
 /**
  * Maps velocity depths to Salamander velocities
  */
 const velocitiesMap = {
-	1  : [8],
-	2  : [6, 12],
-	3  : [1, 8, 15],
-	4  : [1, 5, 10, 15],
-	5  : [1, 4, 8, 12, 16],
-	6  : [1, 3, 7, 10, 13, 16],
-	7  : [1, 3, 6, 9, 11, 13, 16],
-	8  : [1, 3, 5, 7, 9, 11, 13, 15],
-	9  : [1, 3, 5, 7, 9, 11, 13, 15, 16],
+	1 : [8],
+	2 : [6, 12],
+	3 : [1, 8, 15],
+	4 : [1, 5, 10, 15],
+	5 : [1, 4, 8, 12, 16],
+	6 : [1, 3, 7, 10, 13, 16],
+	7 : [1, 3, 6, 9, 11, 13, 16],
+	8 : [1, 3, 5, 7, 9, 11, 13, 15],
+	9 : [1, 3, 5, 7, 9, 11, 13, 15, 16],
 	10 : [1, 2, 3, 5, 7, 9, 11, 13, 15, 16],
 	11 : [1, 2, 3, 5, 7, 9, 11, 13, 14, 15, 16],
 	12 : [1, 2, 3, 4, 5, 7, 9, 11, 13, 14, 15, 16],

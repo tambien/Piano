@@ -1,7 +1,7 @@
 import PianoBase from './PianoBase'
 import Salamander from './Salamander'
-import {createSource, randomBetween} from './Util'
-import Tone, {Buffers} from 'tone'
+import { createSource, randomBetween } from './Util'
+import Tone, { Buffers } from 'tone'
 
 export default class Pedal extends PianoBase {
 	constructor(){

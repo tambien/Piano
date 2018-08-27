@@ -27,4 +27,4 @@ function randomBetween(low, high){
 	return Math.random() * (high - low) + low
 }
 
-export {midiToNote, noteToMidi, createSource, midiToFrequencyRatio, randomBetween}
+export { midiToNote, noteToMidi, createSource, midiToFrequencyRatio, randomBetween }

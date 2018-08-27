@@ -1,9 +1,9 @@
-import Tone, { Gain, Frequency, AudioNode, Buffer} from 'tone'
-import Pedal from './Pedal'
-import {Notes} from './Notes'
-import Harmonics from './Harmonics'
-import Release from './Release'
-import Salamander from './Salamander'
+import Tone, { Gain, Frequency, AudioNode, Buffer } from 'tone'
+// import Pedal from './Pedal'
+// import { Notes } from './Notes'
+// import Harmonics from './Harmonics'
+// import Release from './Release'
+// import Salamander from './Salamander'
 
 /**
  *  @class Multisampled Grand Piano using [Salamander Piano Samples](https://archive.org/details/SalamanderGrandPianoV3)
@@ -13,18 +13,19 @@ export class Piano extends AudioNode {
 
 	constructor(){
 
-		const options = Tone.defaults(arguments, ["range", "velocities", "release"], {
+		const options = Tone.defaults(arguments, ['velocities'], {
 			velocities : 1,
 			range : [21, 108],
 			release : true
-		});
+		})
 
-		super()
+		super(options)
+
 		this.createInsOuts(0, 1)
-
-		this._loaded = false
-
+		
 		this._heldNotes = new Map()
+
+		/*this._loaded = false
 
 		this._sustainedNotes = new Map()
 
@@ -36,7 +37,7 @@ export class Piano extends AudioNode {
 			this._harmonics = new Harmonics(options.range).connect(this.output)
 
 			this._release = new Release(options.range).connect(this.output)
-		}
+		}*/
 	}
 
 	/**
@@ -122,7 +123,7 @@ export class Piano extends AudioNode {
 
 			if (!this._heldNotes.has(note)){
 				//record the start time and velocity
-				this._heldNotes.set(note, {time, velocity})
+				this._heldNotes.set(note, { time, velocity })
 
 				this._notes.start(note, time, velocity)
 			}
@@ -185,7 +186,7 @@ export class Piano extends AudioNode {
 	 * piano.setVolume('release', -10)
 	 */
 	setVolume(param, vol){
-		switch(param){
+		switch (param){
 			case 'note':
 				this._notes.volume = vol
 				break

@@ -1,6 +1,6 @@
 import Salamander from './Salamander'
 import PianoBase from './PianoBase'
-import {createSource, randomBetween} from './Util'
+import { createSource, randomBetween } from './Util'
 import { Buffers } from 'tone'
 
 export default class Release extends PianoBase {
