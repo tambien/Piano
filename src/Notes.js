@@ -60,12 +60,18 @@ export class Notes extends PianoBase {
 	_getNote(note, velocity){
 		return this._samplers[velocity].get(note)
 	}
+	
+	_disposeSource(src){
+		src.dispose();
+		src = null;
+	}
 
 	stop(note, time, velocity){
 		//stop all of the currently playing note
 		if (this._activeNotes.has(note)){
 			this._activeNotes.get(note).forEach(source => {
 				const release = 1
+				source.onended = this._disposeSource
 				source.stop(time + release, release)
 			})
 			this._activeNotes.delete(note)

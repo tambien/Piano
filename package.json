@@ -24,6 +24,6 @@
     "webmidi": "^2.0.0-rc.7"
   },
   "dependencies": {
-    "tone": "^0.12.5"
+    "tone": "^0.12.80"
   }
 }
