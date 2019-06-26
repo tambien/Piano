@@ -1,4 +1,4 @@
-import Tone, { Frequency, BufferSource } from 'tone'
+import { Frequency } from 'tone'
 
 function noteToMidi(note){
 	return Frequency(note).toMidi()

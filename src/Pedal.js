@@ -1,42 +1,53 @@
-import PianoBase from './PianoBase'
-import Salamander from './Salamander'
-import { createSource, randomBetween } from './Util'
-import Tone, { Buffers } from 'tone'
+import { BufferSource, Buffers, AudioNode } from 'tone'
+import { randomBetween } from './Util'
 
-export default class Pedal extends PianoBase {
-	constructor(){
+export class Pedal extends AudioNode {
+	constructor({ samples, pedal }){
 		super()
+		this.createInsOuts(0, 1)
 
 		this._downTime = Infinity
 
 		this._currentSound = null
 
-		this._buffers = null
+		this._pedalSound = pedal
+
+		if (this._pedalSound){
+			this._loaded = new Promise((success) => {
+				this._buffers = new Buffers({
+					up1 : 'pedalU1.mp3',
+					down1 : 'pedalD1.mp3',
+					up2 : 'pedalU2.mp3',
+					down2 : 'pedalD2.mp3',
+				}, success, samples)
+			})
+		} else {
+			this._loaded = Promise.resolve()
+		}
+
 	}
 
-	load(baseUrl){
-		return new Promise((success) => {
-			this._buffers = new Buffers({
-				up : 'pedalU1.mp3',
-				down : 'pedalD1.mp3'
-			}, success, baseUrl)
-		})
+	load(){
+		return this._loaded
 	}
 
 	/**
 	 *  Squash the current playing sound
 	 */
 	_squash(time){
-		if (this._currentSound){
-			this._currentSound.stop(time+0.1, 0.1)
+		if (this._currentSound && !this._currentSound._sourceStopped){
+			this._currentSound.stop(time)
 		}
 		this._currentSound = null
 	}
 
 	_playSample(time, dir){
-		this._currentSound = createSource(this._buffers.get(dir))
-		this._currentSound.curve = 'exponential'
-		this._currentSound.connect(this.output).start(time, randomBetween(0, 0.01), undefined, 0.5 * randomBetween(0.5, 1), 0.05)
+		if (this._pedalSound){
+			this._currentSound = new BufferSource(this._buffers.get(`${dir}${Math.random() > 0.5 ? 1 : 2}`))
+			this._currentSound.curve = 'exponential'
+			this._currentSound.fadeOut = 0.1
+			this._currentSound.connect(this.output).start(time, randomBetween(0, 0.01), undefined, 0.1 * randomBetween(0.5, 1), 0.05)
+		}
 	}
 
 	down(time){

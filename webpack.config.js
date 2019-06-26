@@ -1,51 +1,63 @@
-const webpack = require('webpack');
 const path = require('path')
 
-module.exports = [{
-	context: __dirname,
-	entry: {Demo: ['babel-polyfill', './Demo']},
-	output: {
-		filename: './build/[name].js',
-		chunkFilename: './build/[id].js',
-		sourceMapFilename : '[file].map',
+const commonConfig = {
+	mode : 'development',
+	entry : {
+		Piano : ['./src/Piano.js'],
+	},
+	context : __dirname,
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'Piano',
+		libraryTarget : 'umd',
+		libraryExport : 'Piano'
 	},
 	resolve : {
-		modules : ['node_modules']
+		modules : [
+			'node_modules',
+			path.resolve(__dirname, '.'),
+		],
+		alias : {
+			Tone : 'node_modules/tone/Tone'
+		},
 	},
-	module: {
-		loaders: [{
-			test: /\.js$/,
-			exclude: /(node_modules)|Tone\.js/,
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
+	module : {
+		rules : [
+			{ 
+				test : /\.js$/, 
+				exclude : /node_modules/, 
+				loader : 'babel-loader' 
 			}
-		}]
+		]
 	},
-	devtool : '#source-map'
-}, {
-	context: __dirname + '/src',
-	entry: {Piano: './Piano'},
-	output: {
-		filename: './build/[name].js',
-		chunkFilename: './build/[id].js',
-		sourceMapFilename : '[file].map',
-		library: 'Piano',
-		libraryTarget: 'umd',
+	devtool : 'source-map'
+}
+
+const pianoConfig = Object.assign({}, commonConfig, {
+	entry : {
+		Piano : ['./src/Piano.js'],
 	},
-	resolve : {
-		modules : ['node_modules']
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'Piano',
+		libraryTarget : 'umd',
+		libraryExport : 'Piano'
 	},
-	module: {
-		loaders: [{
-			test: /\.js$/,
-			exclude: /(node_modules)|Tone\.js/,
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
-			}
-		}]
+})
+
+const midikeyboardConfig = Object.assign({}, commonConfig, {
+	entry : {
+		MidiPiano : ['./src/MidiPiano.js'],
 	},
-	externals: ['tone'],
-	devtool : '#source-map'
-}]
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'MidiPiano',
+		libraryTarget : 'umd',
+		libraryExport : 'MidiPiano'
+	},
+})
+
+module.exports = [pianoConfig, midikeyboardConfig]

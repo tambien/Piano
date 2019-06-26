@@ -1,0 +1,16 @@
+sudo: required
+addons:
+ chrome: stable
+dist: trusty
+language: node_js
+node_js:
+- '9'
+before_deploy: npm run increment
+deploy:
+- provider: npm
+  skip_cleanup: true
+  email: yotammann@gmail.com
+  api_key: $NPM_TOKEN
+  on:
+    # don't publish on cron or PRs
+    condition: $TRAVIS_EVENT_TYPE != cron && $TRAVIS_EVENT_TYPE != pull_request
