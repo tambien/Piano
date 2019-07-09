@@ -19,15 +19,25 @@ function compile(fileNames) {
     if (!compilerOptions.module || compilerOptions.module.toLowerCase() != 'es2015')
         console.log(`"module" key in compilerOptions has value: "${compilerOptions.module}". The recommended value is "es2015", which allows webpack to build successfully`);
     
+    
+    let options = {
+        outDir: compilerOptions.outDir,
+        module: ts.ModuleKind[compilerOptions.module.toUpperCase()],
+        target: ts.ScriptTarget[compilerOptions.target.toUpperCase()],
+        sourceMap: compilerOptions.sourceMap
+    };
+    // let options = {
+    //     outDir: compilerOptions.outDir,
+    //     module: ts.ModuleKind.ES2015,
+    //     target: ts.ScriptTarget.ES2017,
+    //     sourceMap: compilerOptions.sourceMap
+    // };
+    console.log('options: ', options);
     const tsfiles = fs.readdirSync('ts').map(f => `ts/${f}`);
     console.log('tsfiles: ', tsfiles);
-    const program = ts.createProgram(tsfiles, {
-        "outDir": "./dist/",
-        "module": ts.ModuleKind.ES2015,
-        "target": ts.ScriptTarget.ES2017,
-        "sourceMap": true
-    });
+    const program = ts.createProgram(tsfiles, options);
     const emitResult = program.emit();
+    /*
     
     const allDiagnostics = ts
         .getPreEmitDiagnostics(program)
@@ -47,54 +57,9 @@ function compile(fileNames) {
             // console.log(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, "\n")}`);
         }
     });
-    
-    /*const commonConfig = {
-        mode: 'development',
-        entry: {
-            Piano: ['./dist/Piano.js'],
-        },
-        context: __dirname,
-        output: {
-            path: path.resolve(__dirname, 'build'),
-            filename: '[name].js',
-            library: 'Piano',
-            libraryTarget: 'umd',
-            libraryExport: 'Piano'
-        },
-        resolve: {
-            modules: [
-                'node_modules',
-                path.resolve(__dirname, '.'),
-            ],
-            alias: {
-                Tone: 'node_modules/tone/Tone'
-            },
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.js$/,
-                    exclude: /node_modules/,
-                    loader: 'babel-loader'
-                }
-            ]
-        },
-        devtool: 'inline-source-map'
-    };
-    
-    const pianoConfig = Object.assign({}, commonConfig, {
-        entry: {
-            Piano: ['./dist/Piano.js'],
-        },
-        output: {
-            path: path.resolve(__dirname, 'build'),
-            filename: '[name].js',
-            library: 'Piano',
-            libraryTarget: 'umd',
-            libraryExport: 'Piano'
-        },
-    });
     */
+    
+    
     const webpackConfig = require('../webpack.config');
     
     console.log('webpackConfig: ', webpackConfig[0]);
