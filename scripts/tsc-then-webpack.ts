@@ -19,7 +19,14 @@ function compile(fileNames) {
     if (!compilerOptions.module || compilerOptions.module.toLowerCase() != 'es2015')
         console.log(`"module" key in compilerOptions has value: "${compilerOptions.module}". The recommended value is "es2015", which allows webpack to build successfully`);
     
-    const program = ts.createProgram(fileNames, compilerOptions);
+    const tsfiles = fs.readdirSync('ts').map(f => `ts/${f}`);
+    console.log('tsfiles: ', tsfiles);
+    const program = ts.createProgram(tsfiles, {
+        "outDir": "./dist/",
+        "module": ts.ModuleKind.ES2015,
+        "target": ts.ScriptTarget.ES2017,
+        "sourceMap": true
+    });
     const emitResult = program.emit();
     
     const allDiagnostics = ts
@@ -88,12 +95,13 @@ function compile(fileNames) {
         },
     });
     */
-    const webpackConfig = require('../webpack.config');
+    /*const webpackConfig = require('../webpack.config');
     console.log('webpackConfig: ', webpackConfig);
     webpack(webpackConfig, (err, stats) => {
         if (err) throw err;
         console.log('stats: ', stats);
     })
+    */
     
     
     // const exitCode = emitResult.emitSkipped ? 1 : 0;
