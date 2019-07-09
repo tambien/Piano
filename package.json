@@ -29,6 +29,8 @@
     "semver": "^5.5.0",
     "static-server": "^2.2.1",
     "tone": "^13.6.11",
+    "ts-loader": "^6.0.4",
+    "typescript": "^3.5.3",
     "webmidi": "^2.2.0",
     "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3"
