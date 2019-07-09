@@ -6,6 +6,7 @@
   "scripts": {
     "watch": "webpack -w",
     "build": "webpack -p --env.production",
+    "tscThenBuild": "tsc -p tsconfig.json && webpack -p --env.production",
     "increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
     "test": "npm run build && mocha test/test.js --timeout 30000",
     "test:mocha": "mocha test/test.js --timeout 30000"
@@ -13,6 +14,8 @@
   "files": [
     "README.md",
     "LICENSE",
+    "ts",
+    "dist",
     "build/piano.js.map",
     "build/piano.js",
     "src"

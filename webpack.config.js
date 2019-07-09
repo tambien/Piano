@@ -3,7 +3,7 @@ const path = require('path')
 const commonConfig = {
 	mode : 'development',
 	entry : {
-		Piano : ['./src/Piano.js'],
+		Piano : ['./dist/Piano.js'],
 	},
 	context : __dirname,
 	output : {
@@ -31,12 +31,12 @@ const commonConfig = {
 			}
 		]
 	},
-	devtool : 'source-map'
+	devtool : 'inline-source-map'
 }
 
 const pianoConfig = Object.assign({}, commonConfig, {
 	entry : {
-		Piano : ['./src/Piano.js'],
+		Piano : ['./dist/Piano.js'],
 	},
 	output : {
 		path : path.resolve(__dirname, 'build'),
