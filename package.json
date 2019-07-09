@@ -14,8 +14,6 @@
   "files": [
     "README.md",
     "LICENSE",
-    "ts",
-    "dist",
     "build/piano.js.map",
     "build/piano.js",
     "src"
