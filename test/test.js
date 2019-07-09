@@ -5,9 +5,9 @@ const StaticServer = require('static-server')
 
 const PORT = 3000
 var server = new StaticServer({
-	rootPath : path.resolve(__dirname, '../'), 
-	port : PORT, 
-	cors : '*', 
+	rootPath : path.resolve(__dirname, '../'),
+	port : PORT,
+	cors : '*',
 })
 
 describe('Piano', async () => {
@@ -19,10 +19,10 @@ describe('Piano', async () => {
 	after(() => {
 		server.stop()
 	})
-	
+
 	async function loadPage(url){
 		const serverPrefix = `http://localhost:${PORT}/test`
-		const browser = await puppeteer.launch({ 
+		const browser = await puppeteer.launch({
 			headless : true,
 			args : ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
 		})
