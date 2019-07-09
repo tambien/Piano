@@ -10,4 +10,5 @@ cors.json
 *.sublime-project
 build
 .idea
+.vscode
 gilad-notes.md
