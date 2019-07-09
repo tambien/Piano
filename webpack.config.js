@@ -47,17 +47,20 @@ const pianoConfig = Object.assign({}, commonConfig, {
 	},
 })
 
-const midikeyboardConfig = Object.assign({}, commonConfig, {
-	entry : {
-		MidiPiano : ['./src/MidiPiano.js'],
-	},
-	output : {
-		path : path.resolve(__dirname, 'build'),
-		filename : '[name].js',
-		library : 'MidiPiano',
-		libraryTarget : 'umd',
-		libraryExport : 'MidiPiano'
-	},
-})
-
-module.exports = [pianoConfig, midikeyboardConfig]
+/**
+	const midikeyboardConfig = Object.assign({}, commonConfig, {
+		entry : {
+			MidiPiano : ['./src/MidiPiano.js'],
+		},
+		output : {
+			path : path.resolve(__dirname, 'build'),
+			filename : '[name].js',
+			library : 'MidiPiano',
+			libraryTarget : 'umd',
+			libraryExport : 'MidiPiano'
+		},
+	})
+	
+	module.exports = [pianoConfig, midikeyboardConfig]
+	*/
+module.exports = [pianoConfig]
