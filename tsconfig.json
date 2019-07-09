@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
-	  "outDir": "./dist/",
-	//   "noImplicitAny": true,
-	  "module": "es2015",
-	  "target": "es2017",
-	  "sourceMap": true
+		"outDir": "./dist/",
+		"module": "es2015",
+		"target": "es2017",
+		"sourceMap": true
 	},
-	"include": ["./ts"]
-  }
+	"include": [
+		"./ts"
+	]
+}

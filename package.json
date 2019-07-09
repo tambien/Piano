@@ -1,45 +1,47 @@
 {
-  "name": "@tonejs/piano",
-  "version": "0.1.0",
-  "description": "detailed piano using Salamander samples",
-  "main": "build/piano.js",
-  "scripts": {
-    "watch": "webpack -w",
-    "build": "webpack -p --env.production",
-    "tscThenBuild": "tsc -p tsconfig.json && webpack -p --env.production",
-    "increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
-    "test": "npm run build && mocha test/test.js --timeout 30000",
-    "test:mocha": "mocha test/test.js --timeout 30000"
-  },
-  "files": [
-    "README.md",
-    "LICENSE",
-    "build/piano.js.map",
-    "build/piano.js",
-    "src"
-  ],
-  "author": "Yotam Mann",
-  "license": "MIT",
-  "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "chai": "^4.1.2",
-    "eslint": "^5.2.0",
-    "mocha": "^5.2.0",
-    "puppeteer": "^1.6.1",
-    "semver": "^5.5.0",
-    "static-server": "^2.2.1",
-    "tone": "^13.6.11",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
-    "webmidi": "^2.2.0",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
-  },
-  "keywords": [
-    "Web Audio",
-    "Tone.js",
-    "Piano",
-    "Sampler"
-  ]
+	"name": "@tonejs/piano",
+	"version": "0.1.0",
+	"description": "detailed piano using Salamander samples",
+	"main": "build/piano.js",
+	"scripts": {
+		"watch": "webpack -w",
+		"compile": "tsc -p tsconfig.json",
+		"build": "webpack -p --env.production",
+		"tscThenBuild": "node scripts/tsc-then-webpack.ts",
+		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
+		"test": "npm run build && mocha test/test.js --timeout 30000",
+		"test:mocha": "mocha test/test.js --timeout 30000"
+	},
+	"files": [
+		"README.md",
+		"LICENSE",
+		"build/piano.js.map",
+		"build/piano.js",
+		"src",
+		"scripts"
+	],
+	"author": "Yotam Mann",
+	"license": "MIT",
+	"devDependencies": {
+		"babel-core": "^6.26.3",
+		"babel-loader": "^7.1.4",
+		"chai": "^4.1.2",
+		"eslint": "^5.2.0",
+		"mocha": "^5.2.0",
+		"puppeteer": "^1.6.1",
+		"semver": "^5.5.0",
+		"static-server": "^2.2.1",
+		"tone": "^13.6.11",
+		"ts-loader": "^6.0.4",
+		"typescript": "^3.5.3",
+		"webmidi": "^2.2.0",
+		"webpack": "^4.8.3",
+		"webpack-cli": "^2.1.3"
+	},
+	"keywords": [
+		"Web Audio",
+		"Tone.js",
+		"Piano",
+		"Sampler"
+	]
 }
