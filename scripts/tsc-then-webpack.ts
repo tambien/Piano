@@ -95,13 +95,13 @@ function compile(fileNames) {
         },
     });
     */
-    /*const webpackConfig = require('../webpack.config');
-    console.log('webpackConfig: ', webpackConfig);
+    const webpackConfig = require('../webpack.config');
+    
+    console.log('webpackConfig: ', webpackConfig[0]);
     webpack(webpackConfig, (err, stats) => {
         if (err) throw err;
         console.log('stats: ', stats);
     })
-    */
     
     
     // const exitCode = emitResult.emitSkipped ? 1 : 0;
