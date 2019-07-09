@@ -9,3 +9,4 @@ cors.json
 *.sublime-workspace
 *.sublime-project
 build
+.idea
