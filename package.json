@@ -8,11 +8,13 @@
 		"compile": "tsc -p tsconfig.json",
 		"build": "webpack -p --env.production",
 		"build:debug": "webpack --debug",
-		"compileThenBuild": "node scripts/compileThenBuild.js",
-		"compileThenBuild:debug": "node scripts/compileThenBuild.js --debug",
+		"compileAndBuild": "node scripts/compileAndBuild.js",
+		"compileAndBuild:debug": "npm run compileAndBuild -- --debug",
 		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
-		"test": "npm run compileThenBuild && mocha test/test.js --timeout 30000",
-		"test:mocha": "mocha test/test.js --timeout 30000"
+		"test": "npm run compileAndBuild && npm run test:mocha",
+		"test:debug": "npm run compileAndBuild:debug && npm run test:mocha:debug",
+		"test:mocha": "mocha test/test.js --timeout 30000",
+		"test:mocha:debug": "npm run test:mocha -- --dbg"
 	},
 	"files": [
 		"README.md",

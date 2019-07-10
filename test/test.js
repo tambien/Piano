@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const puppeteer = require('puppeteer')
 const path = require('path')
 const { expect } = require('chai')
@@ -10,6 +11,9 @@ var server = new StaticServer({
 	cors : '*',
 })
 
+let debug = process.argv.includes('--dbg')
+console.log('args: ', process.argv.slice(2))
+
 describe('Piano', async () => {
 	before(() => {
 		return new Promise(done => server.start(done))
@@ -19,16 +23,22 @@ describe('Piano', async () => {
 		server.stop()
 	})
 
+	let launchOptions = {
+		headless : !debug,
+		args : ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
+	}
+	if (debug){
+		launchOptions = {
+			...launchOptions,
+			devtools : true,
+			slowMo : 500,
+			pipe : true,
+		}
+	}
+	console.log('Launching puppeteer with options: %o', launchOptions)
 	async function loadPage(url){
 		const serverPrefix = `http://localhost:${PORT}/test`
-		const browser = await puppeteer.launch({
-			headless : true,
-			// headless : false,
-			// devtools : true,
-			// slowMo : 500,
-			// pipe : true,
-			args : ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
-		})
+		const browser = await puppeteer.launch(launchOptions)
 		const page = await browser.newPage()
 		page.on('pageerror', e => {
 			throw new Error(e)

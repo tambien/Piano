@@ -5,9 +5,9 @@ require('./extendConsole')
 function printUsage(){
 	const usage = [
 		'USAGE:',
-		'"npm run-script compileThenBuild" compiles ts files to js, then packs with webpack via "build" script',
-		'"npm run-script compileThenBuild help" shows this message',
-		'"npm run-script compileThenBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
+		'"npm run-script compileAndBuild" compiles ts files to js, then packs with webpack via "build" script',
+		'"npm run-script compileAndBuild help" shows this message',
+		'"npm run-script compileAndBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
 	]
 	console.log(usage.join('\n\t'))
 }
@@ -36,13 +36,13 @@ function compile(debug){
 			throw e
 		}
 	}
-	
+
 	console.log('compilerOptions: %O', compilerOptions)
 	if (!compilerOptions){
 		console.yellow('\t** Error, bad compilerOptions. Exiting')
 		process.exit()
 	}
-	
+
 	if (compilerOptions.module && compilerOptions.module.toUpperCase() !== 'ES2015'){
 		const warning = [
 			`** Warning: "module" key in compilerOptions has value: "${compilerOptions.module},"`,
@@ -74,9 +74,9 @@ function compile(debug){
 		target : ts.ScriptTarget[target],
 		sourceMap : sourceMap
 	}
-	
+
 	console.log('Finally compiling to temp directory with options: %o', options)
-	
+
 	const srcFiles = fs.readdirSync('src').map(f => `src/${f}`)
 	console.log('Compiling the following ts files: %o', srcFiles)
 	const program = ts.createProgram(srcFiles, options)
@@ -91,7 +91,7 @@ function compile(debug){
 		console.green('Finished webpacking')
 	} catch (err){
 		console.yellow(err)
-	} 
+	}
 	console.underscore('Removing "temp" directory...')
 	removeTempDir()
 	console.log('Process exiting')
@@ -110,7 +110,7 @@ if (args[0]!==undefined){
 	} if (args[0].includes('debug')){
 		compile(true)
 		process.exit()
-	} 
+	}
 	console.yellow(`Unknown arguments: ${args}\nExiting`)
 	printUsage()
 	process.exit()
