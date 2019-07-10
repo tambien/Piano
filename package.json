@@ -9,7 +9,7 @@
 		"build": "webpack -p --env.production",
 		"tscThenBuild": "node scripts/tscThenBuild.js",
 		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
-		"test": "npm run build && mocha test/test.js --timeout 30000",
+		"test": "npm run tscThenBuild && mocha test/test.js --timeout 30000",
 		"test:mocha": "mocha test/test.js --timeout 30000"
 	},
 	"files": [
@@ -36,15 +36,14 @@
 		"typescript": "^3.5.3",
 		"webmidi": "^2.2.0",
 		"webpack": "^4.8.3",
-		"webpack-cli": "^2.1.3"
+		"webpack-cli": "^2.1.3",
+		"tone": "^13.8.18"
 	},
 	"keywords": [
 		"Web Audio",
 		"Tone.js",
 		"Piano",
 		"Sampler"
-	],
-	"dependencies": {
-		"tone": "^13.8.18"
-	}
+	]
+	
 }
