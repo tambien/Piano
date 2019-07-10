@@ -87,19 +87,26 @@ function compile(logTsErrors){
 	}
 	console.green('Finished compiling ts files')
 	const wpcmd = 'npm run-script build'
-	console.underscore(`Executing "${wpcmd}"...`)
-	const { execSync } = require('child_process')
-	execSync(wpcmd, { encoding : 'utf8', stdio : 'inherit' })
-	console.green('Finished webpacking')
-	console.underscore('Deleting "temp" directory...')
-	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
-	fs.rmdirSync('temp')
+	try {
+		console.underscore(`Executing "${wpcmd}"...`)
+		const { execSync } = require('child_process')
+		execSync(wpcmd, { encoding : 'utf8', stdio : 'inherit' })
+		console.green('Finished webpacking')
+	} catch (err){
+		console.yellow(err)
+	} 
+	console.underscore('Removing "temp" directory...')
+	removeTempDir()
 	console.log('Process exiting')
 	process.exit(0)
 
 }
 
 const arg = process.argv[2]
+function removeTempDir(){
+	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
+	fs.rmdirSync('temp')
+}
 function printUsage(){
 	const usage = [
 		'USAGE:',
