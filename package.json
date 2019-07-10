@@ -7,7 +7,7 @@
 		"watch": "webpack -w",
 		"compile": "tsc -p tsconfig.json",
 		"build": "webpack -p --env.production",
-		"tscThenBuild": "node scripts/tsc-then-webpack.ts",
+		"tscThenBuild": "node scripts/tsc-then-webpack.js",
 		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
 		"test": "npm run build && mocha test/test.js --timeout 30000",
 		"test:mocha": "mocha test/test.js --timeout 30000"
