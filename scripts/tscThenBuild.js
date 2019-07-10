@@ -98,7 +98,7 @@ function compile(logTsErrors){
 	console.underscore('Removing "temp" directory...')
 	removeTempDir()
 	console.log('Process exiting')
-	process.exit(0)
+	process.exit()
 
 }
 
