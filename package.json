@@ -32,7 +32,6 @@
 		"puppeteer": "^1.6.1",
 		"semver": "^5.5.0",
 		"static-server": "^2.2.1",
-		"tone": "^13.6.11",
 		"ts-loader": "^6.0.4",
 		"typescript": "^3.5.3",
 		"webmidi": "^2.2.0",
@@ -44,5 +43,8 @@
 		"Tone.js",
 		"Piano",
 		"Sampler"
-	]
+	],
+	"dependencies": {
+		"tone": "^13.8.18"
+	}
 }

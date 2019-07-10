@@ -1,3 +1,4 @@
+import * as Tone from ''
 import { AudioNode, Midi } from 'tone'
 import { getNotesInRange, velocitiesMap } from './Salamander'
 import { String } from './String'

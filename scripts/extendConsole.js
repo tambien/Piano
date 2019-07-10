@@ -27,3 +27,4 @@ const colors = {
 for (let [k, v] of Object.entries(colors)){
 	console[k] = (...args) => console.log(`${v}${args}${reset}`)	
 }
+

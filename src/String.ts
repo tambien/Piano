@@ -1,5 +1,5 @@
-import { AudioNode, Sampler } from 'tone'
 import { getNotesUrl } from './Salamander'
+import { Sampler,AudioNode } from '../node_modules/tone/tone';
 
 /**
  * A single velocity of strings

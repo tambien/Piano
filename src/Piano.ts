@@ -1,13 +1,15 @@
-import * as Tone from 'tone'
-const  { AudioNode, Midi, Volume } = Tone;
+import * as Tone from 'tone';
 import { Strings } from './Strings'
 import { Pedal } from './Pedal'
 import { Keybed } from './Keybed'
 import { Harmonics } from './Harmonics'
+const { Volume, AudioNode, Midi }  = Tone;
+
 /**
  *  @extends {Tone}
  */
 export class Piano extends AudioNode {
+	
 	/**The string harmonics */
 	_harmonicsOutput: Tone.Volume;
 	_harmonicsSampler: Harmonics;
@@ -29,15 +31,13 @@ export class Piano extends AudioNode {
 	_sustainedNotes: Map<any, any>;
 	harmonics: any;
 	keybed: any;
-	output(output: any): any {
-		throw new Error("Method not implemented.");
-	}
 	pedal: any;
 	strings: any;
+	output: Tone.ProcessingNode;
 	
 	constructor(){
 
-		const options : ToneOptions = Tone.defaults(arguments, ['velocities'], {
+		const options: PianoOptions = Tone.defaults(arguments, ['velocities'], {
 			//one velocity
 			velocities : 1,
 			//full range 88 keys
@@ -93,7 +93,7 @@ export class Piano extends AudioNode {
 	/**
 	 *  Load all the samples
 	 */
-	async load(){
+	async load():Promise<void>{
 		await Promise.all([
 			this._stringSamplers.load(),
 			this._pedalSampler.load(),
@@ -106,16 +106,16 @@ export class Piano extends AudioNode {
 	/**
 	 * If all the samples are loaded or not
 	 */
-	get loaded(){
+	get loaded():boolean{
 		return this._loaded
 	}
 
 	/**
 	 *  Put the pedal down at the given time. Causes subsequent
 	 *  notes and currently held notes to sustain.
-	 *  @param  {Time}  time  The time the pedal should go down
+	 *  @param time  The time the pedal should go down
 	 */
-	pedalDown(time: Time): Piano{
+	pedalDown(time: Tone.Encoding.Time): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 			if (!this._pedalSampler.isDown(time)){
@@ -127,9 +127,9 @@ export class Piano extends AudioNode {
 
 	/**
 	 *  Put the pedal up. Dampens sustained notes
-	 *  @param  {Time}  time  The time the pedal should go up
+	 *  @param time  The time the pedal should go up
 	 */
-	pedalUp(time: Time): Piano{
+	pedalUp(time: Tone.Encoding.Time): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 			if (this._pedalSampler.isDown(time)){
@@ -148,12 +148,12 @@ export class Piano extends AudioNode {
 
 	/**
 	 *  Play a note.
-	 *  @param  {String|Number}  note      The note to play. If it is a number, it is assumed
+	 *  @param note      The note to play. If it is a number, it is assumed
 	 *                                     to be MIDI
-	 *  @param  {NormalRange}  velocity  The velocity to play the note
-	 *  @param  {Time}  time      The time of the event
+	 *  @param velocity  The velocity to play the note
+	 *  @param time      The time of the event
 	 */
-	keyDown(note: string | number, time: Time=Tone.immediate(), velocity: NormalRange=0.8): Piano{
+	keyDown(note: string | number, time: Tone.Encoding.Time=Tone.immediate(), velocity: NormalRange=0.8): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 
