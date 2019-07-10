@@ -1,4 +1,3 @@
-import * as Tone from ''
 import { AudioNode, Midi } from 'tone'
 import { getNotesInRange, velocitiesMap } from './Salamander'
 import { String } from './String'
@@ -7,6 +6,12 @@ import { String } from './String'
  *  Manages all of the hammered string sounds
  */
 export class Strings extends AudioNode {
+	
+	_velocities: any;
+	
+	_strings: any;
+	
+	_activeNotes: Map<any, any>;
 
 	constructor({ minNote, maxNote, velocities=1, samples='./audio/' }){
 		super()

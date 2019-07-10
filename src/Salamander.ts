@@ -2,15 +2,15 @@ import { midiToNote } from './Util'
 
 export const githubURL = 'https://tambien.github.io/Piano/Salamander/'
 
-export function getReleasesUrl(midi){
+export function getReleasesUrl(midi: number){
 	return `rel${midi - 20}.[mp3|ogg]`
 }
 
-export function getHarmonicsUrl(midi){
+export function getHarmonicsUrl(midi: number){
 	return `harmS${midiToNote(midi).replace('#', 's')}.[mp3|ogg]`
 }
 
-export function getNotesUrl(midi, vel){
+export function getNotesUrl(midi: any, vel: any){
 	return `${midiToNote(midi).replace('#', 's')}v${vel}.[mp3|ogg]`
 }
 
@@ -41,7 +41,7 @@ export const velocitiesMap = {
  */
 export const allNotes = [21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108]
 
-export function getNotesInRange(min, max){
+export function getNotesInRange(min: number, max: number){
 	return allNotes.filter(note => min <= note && note <= max)
 }
 
@@ -50,10 +50,10 @@ export function getNotesInRange(min, max){
  */
 const harmonics = [21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87]
 
-export function getHarmonicsInRange(min, max){
+export function getHarmonicsInRange(min: number, max: number){
 	return harmonics.filter(note => min <= note && note <= max)
 }
 
-export function inHarmonicsRange(note){
+export function inHarmonicsRange(note: number){
 	return harmonics[0] <= note && note <= harmonics[harmonics.length-1]
 }

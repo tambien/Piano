@@ -1,7 +1,12 @@
+/* eslint-disable no-console */
 import WebMidi from 'webmidi'
 import { EventEmitter } from 'events'
 
 export class MidiKeyboard extends EventEmitter {
+	connectedDevices: Map<any, any>;
+	
+	ready: Promise<unknown>;
+	
 	constructor(){
 		super()
 
@@ -45,6 +50,10 @@ export class MidiKeyboard extends EventEmitter {
 			})
 		}
 
+	}
+	
+	emit(arg0: string, arg1: string, velocity: any){
+		throw new Error('Method not implemented.')
 	}
 
 	_removeListeners(event){

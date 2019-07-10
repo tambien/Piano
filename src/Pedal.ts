@@ -2,6 +2,16 @@ import { BufferSource, Buffers, AudioNode } from 'tone'
 import { randomBetween } from './Util'
 
 export class Pedal extends AudioNode {
+	_downTime: number
+	
+	_currentSound: any
+	
+	_pedalSound: any
+	
+	_loaded: Promise<unknown>
+	
+	_buffers: Buffers
+	
 	constructor({ samples, pedal }){
 		super()
 		this.createInsOuts(0, 1)
@@ -48,6 +58,10 @@ export class Pedal extends AudioNode {
 			this._currentSound.fadeOut = 0.1
 			this._currentSound.connect(this.output).start(time, randomBetween(0, 0.01), undefined, 0.1 * randomBetween(0.5, 1), 0.05)
 		}
+	}
+
+	output(output: any){
+		throw new Error('Method not implemented.')
 	}
 
 	down(time){

@@ -1,9 +1,14 @@
 import { Sampler, Midi, AudioNode } from 'tone'
 import { getHarmonicsInRange, getHarmonicsUrl, inHarmonicsRange } from './Salamander'
 import { randomBetween } from './Util'
-
 export class Harmonics extends AudioNode {
-
+	
+	_harmonicsSound: any;
+	
+	_loaded: Promise<unknown>;
+	
+	_sampler: Sampler;
+	
 	constructor({ minNote, maxNote, release, samples }){
 		super()
 

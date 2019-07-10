@@ -3,6 +3,11 @@ import { BufferSource, AudioNode, Buffers } from 'tone'
 import { randomBetween } from './Util'
 
 export class Keybed extends AudioNode {
+	_buffers: Buffers;
+	
+	_keybedSound: any;
+	
+	_loaded: Promise<unknown>;
 
 	constructor({ minNote, maxNote, release, samples }){
 		super()
@@ -35,5 +40,8 @@ export class Keybed extends AudioNode {
 			//randomize the velocity slightly
 			source.start(time, 0, undefined, 0.015 * velocity * randomBetween(0.5, 1))
 		}
+	}
+	output(output: any) {
+		throw new Error("Method not implemented.");
 	}
 }

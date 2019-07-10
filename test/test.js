@@ -11,7 +11,6 @@ var server = new StaticServer({
 })
 
 describe('Piano', async () => {
-
 	before(() => {
 		return new Promise(done => server.start(done))
 	})
