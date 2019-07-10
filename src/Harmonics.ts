@@ -1,13 +1,16 @@
-import { Sampler, Midi, AudioNode } from 'tone'
+import * as Tone from 'tone'
+// import { Sampler, Midi, AudioNode } from 'tone'
 import { getHarmonicsInRange, getHarmonicsUrl, inHarmonicsRange } from './Salamander'
 import { randomBetween } from './Util'
-export class Harmonics extends AudioNode {
+export class Harmonics extends Tone.AudioNode {
 	
 	_harmonicsSound: any;
 	
 	_loaded: Promise<unknown>;
 	
-	_sampler: Sampler;
+	_sampler: Tone.Sampler;
+	
+	output: Tone.ProcessingNode
 	
 	constructor({ minNote, maxNote, release, samples }){
 		super()
@@ -24,7 +27,7 @@ export class Harmonics extends AudioNode {
 
 		if (this._harmonicsSound){
 			this._loaded = new Promise(onload => {
-				this._sampler = new Sampler(urls, { onload, baseUrl : samples }).connect(this.output)
+				this._sampler = new Tone.Sampler(urls, { onload, baseUrl : samples }).connect(this.output)
 			})
 		} else {
 			this._loaded = Promise.resolve()
@@ -33,7 +36,7 @@ export class Harmonics extends AudioNode {
 
 	triggerAttack(note, time, velocity){
 		if (this._harmonicsSound && inHarmonicsRange(note)){
-			this._sampler.triggerAttack(Midi(note), time, velocity * randomBetween(0.5, 1))
+			this._sampler.triggerAttack(Tone.Midi(note), time, velocity * randomBetween(0.5, 1))
 		}
 	}
 

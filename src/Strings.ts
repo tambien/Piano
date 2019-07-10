@@ -1,17 +1,19 @@
-import { AudioNode, Midi } from 'tone'
+import * as Tone from 'tone'
 import { getNotesInRange, velocitiesMap } from './Salamander'
 import { String } from './String'
 
 /**
  *  Manages all of the hammered string sounds
  */
-export class Strings extends AudioNode {
+export class Strings extends Tone.AudioNode {
 	
 	_velocities: any;
 	
 	_strings: any;
 	
 	_activeNotes: Map<any, any>;
+	
+	output: Tone.ProcessingNode
 
 	constructor({ minNote, maxNote, velocities=1, samples='./audio/' }){
 		super()
@@ -52,13 +54,13 @@ export class Strings extends AudioNode {
 		}
 
 		this._activeNotes.set(note, sampler)
-		sampler.triggerAttack(Midi(note), time, gain)
+		sampler.triggerAttack(Tone.Midi(note), time, gain)
 	}
 
 	triggerRelease(note, time){
 		//trigger the release of all of the notes at that velociy
 		if (this._activeNotes.has(note)){
-			this._activeNotes.get(note).triggerRelease(Midi(note), time)
+			this._activeNotes.get(note).triggerRelease(Tone.Midi(note), time)
 			this._activeNotes.delete(note)
 		}
 	}

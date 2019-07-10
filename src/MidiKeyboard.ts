@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import WebMidi from 'webmidi'
+import WebMidi from '../node_modules/webmidi/webmidi.min.js'
 import { EventEmitter } from 'events'
 
 export class MidiKeyboard extends EventEmitter {
@@ -52,15 +52,16 @@ export class MidiKeyboard extends EventEmitter {
 
 	}
 	
-	emit(arg0: string, arg1: string, velocity: any){
+	emit(event: string | symbol, ...args): boolean {
 		throw new Error('Method not implemented.')
 	}
+
 
 	_removeListeners(event){
 		if (this.connectedDevices.has(event.id)){
 			const device = this.connectedDevices.get(event.id)
 			this.connectedDevices.delete(event.id)
-			console.log('remove', device)
+			console.log('MidiKeyboard._removeListeners(event): removing: ', device)
 			device.removeListener('noteon')
 			device.removeListener('noteoff')
 			device.removeListener('controlchange')

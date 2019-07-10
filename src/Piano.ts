@@ -1,18 +1,19 @@
 import * as Tone from 'tone'
+// import * as ToneStatic from '../node_modules/tone/Tone/core/Tone'
+// import AudioNode from '../node_modules/tone/Tone/core/AudioNode'
 import { Strings } from './Strings'
 import { Pedal } from './Pedal'
 import { Keybed } from './Keybed'
 import { Harmonics } from './Harmonics'
 
-const { Volume, Midi, AudioNode } = Tone
-// import * as Tone from '../node_modules/tone/tone'
-// import {Time} from '../node_modules/tone/tone'
+// const { Volume, Midi } = Tone
+// import {Volume as TVolume} from '../node_modules/tone/Tone/component/Volume'
 
 /**
  *  @extends {Tone}
  */
-export class Piano extends AudioNode {	
-		
+export class Piano extends Tone.AudioNode {
+	
 	/**The string harmonics */
 	_harmonicsOutput: Tone.Volume
 	
@@ -53,7 +54,7 @@ export class Piano extends AudioNode {
 	strings: any
 	
 	output: Tone.ProcessingNode
-		
+	
 	constructor(){
 		
 		const options: PianoOptions = Tone.defaults(arguments, ['velocities'], {
@@ -87,23 +88,23 @@ export class Piano extends AudioNode {
 		
 		this._sustainedNotes = new Map()
 		
-		this._stringsOutput = new Volume(options.volume.strings).connect(this.output)
+		this._stringsOutput = new Tone.Volume(options.volume.strings).connect(this.output)
 		this.strings = this._stringsOutput.volume
 		this._stringSamplers = new Strings(options).connect(this._stringsOutput)
 		
-		this._pedalOutput = new Volume(options.volume.pedal).connect(this.output)
+		this._pedalOutput = new Tone.Volume(options.volume.pedal).connect(this.output)
 		this.pedal = this._pedalOutput.volume
 		this._pedalSampler = new Pedal(options).connect(this._pedalOutput)
 		
-		this._keybedOutput = new Volume(options.volume.keybed).connect(this.output)
+		this._keybedOutput = new Tone.Volume(options.volume.keybed).connect(this.output)
 		this.keybed = this._keybedOutput.volume
 		this._keybedSampler = new Keybed(options).connect(this._keybedOutput)
 		
-		this._harmonicsOutput = new Volume(options.volume.harmonics).connect(this.output)
+		this._harmonicsOutput = new Tone.Volume(options.volume.harmonics).connect(this.output)
 		this.harmonics = this._harmonicsOutput.volume
 		this._harmonicsSampler = new Harmonics(options).connect(this._harmonicsOutput)
 	}
-		
+	
 	/**
 	 *  Load all the samples
 	 */
@@ -116,14 +117,14 @@ export class Piano extends AudioNode {
 		])
 		this._loaded = true
 	}
-		
+	
 	/**
 	 * If all the samples are loaded or not
 	 */
 	get loaded(): boolean{
 		return this._loaded
 	}
-		
+	
 	/**
 	 *  Put the pedal down at the given time. Causes subsequent
 	 *  notes and currently held notes to sustain.
@@ -138,7 +139,7 @@ export class Piano extends AudioNode {
 		}
 		return this
 	}
-		
+	
 	/**
 	 *  Put the pedal up. Dampens sustained notes
 	 *  @param time  The time the pedal should go up
@@ -160,7 +161,7 @@ export class Piano extends AudioNode {
 		}
 		return this
 	}
-		
+	
 	/**
 	 *  Play a note.
 	 *  @param note	  The note to play. If it is a number, it is assumed
@@ -173,7 +174,7 @@ export class Piano extends AudioNode {
 			time = this.toSeconds(time)
 			
 			if (Tone.isString(note)){
-				note = Math.round(Midi(note))
+				note = Math.round(Tone.Midi(<string>note))
 			}
 			
 			if (!this._heldNotes.has(note)){
@@ -186,7 +187,7 @@ export class Piano extends AudioNode {
 		}
 		return this
 	}
-		
+	
 	/**
 	 *  Release a held note.
 	 */
@@ -195,7 +196,7 @@ export class Piano extends AudioNode {
 			time = this.toSeconds(time)
 			
 			if (Tone.isString(note)){
-				note = Math.round(Midi(note))
+				note = Math.round(Tone.Midi(<string>note))
 			}
 			
 			if (this._heldNotes.has(note)){
@@ -231,7 +232,7 @@ export class Piano extends AudioNode {
 		}
 		return this
 	}
-		
+	
 	stopAll(){
 		this.pedalUp()
 		this._heldNotes.forEach((value, note) => {

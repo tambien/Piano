@@ -1,16 +1,16 @@
 import { getNotesUrl } from './Salamander'
-import { Sampler, AudioNode } from '../node_modules/tone/tone'
+import * as Tone from 'tone'
 
 /**
  * A single velocity of strings
  */
-export class String extends AudioNode {
+export class String extends Tone.AudioNode {
 	
-	_loaded: Promise<unknown>;
+	_loaded: Promise<void>;
 	
-	_sampler: Sampler;
+	_sampler: Tone.Sampler;
 	
-	output: Sampler;
+	output: Tone.Sampler;
 	
 	constructor(notes, velocity, baseUrl){
 		super()
@@ -19,7 +19,7 @@ export class String extends AudioNode {
 		notes.forEach(note => urls[note] = getNotesUrl(note, velocity))
 
 		this._loaded = new Promise(onload => {
-			this._sampler = this.output = new Sampler(urls, {
+			this._sampler = this.output = new Tone.Sampler(urls, {
 				onload, baseUrl,
 				release : 0.4,
 				attack : 0,

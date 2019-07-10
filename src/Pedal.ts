@@ -1,7 +1,7 @@
-import { BufferSource, Buffers, AudioNode } from 'tone'
+import * as Tone from 'tone'
 import { randomBetween } from './Util'
 
-export class Pedal extends AudioNode {
+export class Pedal extends Tone.AudioNode {
 	_downTime: number
 	
 	_currentSound: any
@@ -10,7 +10,7 @@ export class Pedal extends AudioNode {
 	
 	_loaded: Promise<unknown>
 	
-	_buffers: Buffers
+	_buffers: Tone.Buffers
 	
 	constructor({ samples, pedal }){
 		super()
@@ -24,7 +24,7 @@ export class Pedal extends AudioNode {
 
 		if (this._pedalSound){
 			this._loaded = new Promise((success) => {
-				this._buffers = new Buffers({
+				this._buffers = new Tone.Buffers({
 					up1 : 'pedalU1.mp3',
 					down1 : 'pedalD1.mp3',
 					up2 : 'pedalU2.mp3',
@@ -53,7 +53,8 @@ export class Pedal extends AudioNode {
 
 	_playSample(time, dir){
 		if (this._pedalSound){
-			this._currentSound = new BufferSource(this._buffers.get(`${dir}${Math.random() > 0.5 ? 1 : 2}`))
+			// @ts-ignore
+			this._currentSound = new Tone.BufferSource(this._buffers.get(`${dir}${Math.random() > 0.5 ? 1 : 2}`))
 			this._currentSound.curve = 'exponential'
 			this._currentSound.fadeOut = 0.1
 			this._currentSound.connect(this.output).start(time, randomBetween(0, 0.01), undefined, 0.1 * randomBetween(0.5, 1), 0.05)

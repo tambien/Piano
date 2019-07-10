@@ -1,9 +1,9 @@
 import { getReleasesUrl } from './Salamander'
-import { BufferSource, AudioNode, Buffers } from 'tone'
+import * as Tone from 'tone'
 import { randomBetween } from './Util'
 
-export class Keybed extends AudioNode {
-	_buffers: Buffers;
+export class Keybed extends Tone.AudioNode {
+	_buffers: Tone.Buffers;
 	
 	_keybedSound: any;
 	
@@ -14,7 +14,7 @@ export class Keybed extends AudioNode {
 
 		this.createInsOuts(0, 1)
 
-		this._buffers = {}
+		this._buffers = <Tone.Buffers>{}
 		for (let i = minNote; i <= maxNote; i++){
 			this._buffers[i] = getReleasesUrl(i)
 		}
@@ -23,7 +23,7 @@ export class Keybed extends AudioNode {
 
 		if (this._keybedSound){
 			this._loaded = new Promise((success) => {
-				this._buffers = new Buffers(this._buffers, success, samples)
+				this._buffers = new Tone.Buffers(this._buffers, success, samples)
 			})
 		} else {
 			this._loaded = Promise.resolve()
@@ -36,7 +36,8 @@ export class Keybed extends AudioNode {
 
 	start(note, time, velocity){
 		if (this._keybedSound && this._buffers.has(note)){
-			const source = new BufferSource(this._buffers.get(note)).connect(this.output)
+			// @ts-ignore
+			const source = new Tone.BufferSource(this._buffers.get(note)).connect(this.output)
 			//randomize the velocity slightly
 			source.start(time, 0, undefined, 0.015 * velocity * randomBetween(0.5, 1))
 		}

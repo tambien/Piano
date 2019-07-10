@@ -23,6 +23,7 @@
 	"author": "Yotam Mann",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/node": "^12.6.2",
 		"@types/tone": "git://github.com/Tonejs/TypeScript.git",
 		"@typescript-eslint/eslint-plugin": "^1.11.0",
 		"@typescript-eslint/parser": "^1.11.0",
