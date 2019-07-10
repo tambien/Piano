@@ -5,9 +5,9 @@ require('./extendConsole')
 function printUsage(){
 	const usage = [
 		'USAGE:',
-		'"npm run-script tscThenBuild" compiles ts files to js, then packs with webpack via "build" script',
-		'"npm run-script tscThenBuild help" shows this message',
-		'"npm run-script tscThenBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
+		'"npm run-script compileThenBuild" compiles ts files to js, then packs with webpack via "build" script',
+		'"npm run-script compileThenBuild help" shows this message',
+		'"npm run-script compileThenBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
 	]
 	console.log(usage.join('\n\t'))
 }
