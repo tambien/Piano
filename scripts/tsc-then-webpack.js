@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 const ts = require('typescript')
 const fs = require('fs')
-const webpack = require('webpack')
 require('./extendConsole')
 
 function compile(logTsErrors){
@@ -87,16 +86,8 @@ function compile(logTsErrors){
 		})
 	}
 	console.green('Finished compiling ts files')
-	console.bright('Importing webpack configurtion from "../webpack.config"... ')
-	const webpackConfig = require('../webpack.config')
-
-	console.log('webpackConfig: ', webpackConfig[0])
-	webpack(webpackConfig, (err, stats) => {
-		if (err){
-			throw err
-		}
-		console.log('Webpack stats: ', stats)
-	})
+	const { execSync } = require('child_process')
+	execSync('npm run-script build', { encoding : 'utf8', stdio : 'inherit' })
 	console.green('Finished webpacking')
 	console.log('Process exiting')
 	process.exit(0)
