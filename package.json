@@ -9,6 +9,7 @@
 		"build": "webpack -p --env.production",
 		"build:debug": "webpack --debug",
 		"tscThenBuild": "node scripts/tscThenBuild.js",
+		"tscThenBuild:debug": "node scripts/tscThenBuild.js --debug",
 		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
 		"test": "npm run tscThenBuild && mocha test/test.js --timeout 30000",
 		"test:mocha": "mocha test/test.js --timeout 30000"

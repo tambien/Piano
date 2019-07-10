@@ -2,9 +2,21 @@
 const ts = require('typescript')
 const fs = require('fs')
 require('./extendConsole')
-
-function compile(logTsErrors){
-	console.log(`Called "compile" function, param "logTsErrors" is ${logTsErrors}`)
+function printUsage(){
+	const usage = [
+		'USAGE:',
+		'"npm run-script tscThenBuild" compiles ts files to js, then packs with webpack via "build" script',
+		'"npm run-script tscThenBuild help" shows this message',
+		'"npm run-script tscThenBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
+	]
+	console.log(usage.join('\n\t'))
+}
+function removeTempDir(){
+	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
+	fs.rmdirSync('temp')
+}
+function compile(debug){
+	console.log(`Called "compile" function, param "debug" is ${debug}`)
 	let compilerOptions
 	try {
 		console.underscore('Extracting compilerOptions from tsconfig.json...')
@@ -68,25 +80,10 @@ function compile(logTsErrors){
 	const srcFiles = fs.readdirSync('src').map(f => `src/${f}`)
 	console.log('Compiling the following ts files: %o', srcFiles)
 	const program = ts.createProgram(srcFiles, options)
-	const emitResult = program.emit()
+	program.emit()
 
-	if (logTsErrors){
-		const allDiagnostics = ts
-			.getPreEmitDiagnostics(program)
-			.concat(emitResult.diagnostics)
-
-		allDiagnostics.forEach(diagnostic => {
-			if (diagnostic.file){
-				let { line, character } = diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start)
-				let message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
-				console.log(`${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)
-			} else {
-				console.log(`${ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')}`)
-			}
-		})
-	}
 	console.green('Finished compiling ts files')
-	const wpcmd = 'npm run-script build'
+	const wpcmd = `npm run-script build${debug?':debug':''}`
 	try {
 		console.underscore(`Executing "${wpcmd}"...`)
 		const { execSync } = require('child_process')
@@ -102,32 +99,21 @@ function compile(logTsErrors){
 
 }
 
-const arg = process.argv[2]
-function removeTempDir(){
-	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
-	fs.rmdirSync('temp')
-}
-function printUsage(){
-	const usage = [
-		'USAGE:',
-		'"npm run-script tscThenBuild" compiles ts files to js, then packs with webpack',
-		'"npm run-script tscThenBuild help" shows this message',
-		'"npm run-script tscThenBuild true" compiles ts then packs, but prints ts compile errors to console (false by default)'
-	]
-	console.log(usage.join('\n\t'))
-}
-if (arg){
-	if (arg === 'help'){
+const args = process.argv.slice(2)
+
+console.log('args: ', args)
+
+if (args[0]!==undefined){
+	if (args.includes('help')){
 		printUsage()
 		process.exit()
-	} if (typeof arg !== 'boolean'){
-		console.yellow('bad argument type')
-		printUsage()
+	} if (args[0].includes('debug')){
+		compile(true)
 		process.exit()
-	} else {
-		compile(arg)
-	}
-} else {
-	compile(false)
+	} 
+	console.yellow(`Unknown arguments: ${args}\nExiting`)
+	printUsage()
+	process.exit()
 }
+compile(false)
 
