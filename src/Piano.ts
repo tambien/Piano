@@ -1,9 +1,8 @@
-import * as Tone from 'tone';
+import * as Tone from 'tone'
 import {Strings} from './Strings'
 import {Pedal} from './Pedal'
 import {Keybed} from './Keybed'
-import {Harmonics} from './Harmonics'
-
+import { Harmonics } from './Harmonics'
 
 const {Volume, Midi, AudioNode} = Tone;
 // import * as Tone from '../node_modules/tone/tone'

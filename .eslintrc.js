@@ -9,15 +9,18 @@ module.exports = {
     "globals": {
         "Piano": true,
         "Tone": true,
-    },
+	},
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint'],
 	"parserOptions": {
-        "ecmaVersion": 2017,
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "sourceType": "module"
-    },
-    "extends": ["eslint:recommended"],
+         "ecmaVersion": 2017,
+         "ecmaFeatures": {
+             "jsx": true
+         },
+         "sourceType": "module"
+     },
+	// extends: ['plugin:@typescript-eslint/recommended'],
+	extends: ['eslint:recommended'],
     "rules": {
 		"dot-location" : [ "error", "property" ],
 		"linebreak-style": [ "error", "unix" ],
