@@ -1,11 +1,11 @@
 {
 	"compilerOptions": {
-		"outDir": "./dist/",
+		"outDir": "./temp/",
 		"module": "es2015",
 		"target": "es2017",
 		"sourceMap": true
 	},
 	"include": [
-		"./ts"
+		"./src"
 	]
 }

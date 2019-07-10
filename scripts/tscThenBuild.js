@@ -7,7 +7,7 @@ function compile(logTsErrors){
 	console.log(`Called "compile" function, param "logTsErrors" is ${logTsErrors}`)
 	let compilerOptions
 	try {
-		console.bright('Extracting compilerOptions from tsconfig.json...')
+		console.underscore('Extracting compilerOptions from tsconfig.json...')
 		compilerOptions = JSON.parse(fs.readFileSync('tsconfig.json', { encoding : 'utf8' })).compilerOptions
 
 	} catch (e){
@@ -63,11 +63,11 @@ function compile(logTsErrors){
 		sourceMap : sourceMap
 	}
 	
-	console.log('Finally compiling with options: %o', options)
+	console.log('Finally compiling to temp directory with options: %o', options)
 	
-	const tsfiles = fs.readdirSync('ts').map(f => `ts/${f}`)
-	console.log('Compiling the following ts files: %o', tsfiles)
-	const program = ts.createProgram(tsfiles, options)
+	const srcFiles = fs.readdirSync('src').map(f => `src/${f}`)
+	console.log('Compiling the following ts files: %o', srcFiles)
+	const program = ts.createProgram(srcFiles, options)
 	const emitResult = program.emit()
 
 	if (logTsErrors){
@@ -86,16 +86,21 @@ function compile(logTsErrors){
 		})
 	}
 	console.green('Finished compiling ts files')
+	const wpcmd = 'npm run-script build'
+	console.underscore(`Executing "${wpcmd}"...`)
 	const { execSync } = require('child_process')
-	execSync('npm run-script build', { encoding : 'utf8', stdio : 'inherit' })
+	execSync(wpcmd, { encoding : 'utf8', stdio : 'inherit' })
 	console.green('Finished webpacking')
+	console.underscore('Deleting "temp" directory...')
+	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
+	fs.rmdirSync('temp')
 	console.log('Process exiting')
 	process.exit(0)
 
 }
 
 const arg = process.argv[2]
-if (arg && arg === 'help'){
+function printUsage(){
 	const usage = [
 		'USAGE:',
 		'"npm run-script tscThenBuild" compiles ts files to js, then packs with webpack',
@@ -103,7 +108,19 @@ if (arg && arg === 'help'){
 		'"npm run-script tscThenBuild true" compiles ts then packs, but prints ts compile errors to console (false by default)'
 	]
 	console.log(usage.join('\n\t'))
-	process.exit()
+}
+if (arg){
+	if (arg === 'help'){
+		printUsage()
+		process.exit()
+	} if (typeof arg !== 'boolean'){
+		console.yellow('bad argument type')
+		printUsage()
+		process.exit()
+	} else {
+		compile(arg)
+	}
+} else {
+	compile(false)
 }
 
-compile(Boolean(arg))
