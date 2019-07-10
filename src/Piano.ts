@@ -4,15 +4,40 @@ import { Strings } from './Strings'
 import { Pedal } from './Pedal'
 import { Keybed } from './Keybed'
 import { Harmonics } from './Harmonics'
-
 /**
  *  @extends {Tone}
  */
 export class Piano extends AudioNode {
-
+	/**The string harmonics */
+	_harmonicsOutput: Tone.Volume;
+	_harmonicsSampler: Harmonics;
+	/** The currently held notes*/
+	_heldNotes: Map<any, any>;
+	/**The keybed release sound */
+	_keybedOutput: Tone.Volume;
+	_keybedSampler: Keybed;
+	/**If it's loaded or not */
+	_loaded: boolean; 
+	/**The pedal */
+	_pedalOutput: Tone.Volume;
+	_pedalSampler: Pedal;
+	_release: any;
+	_stringSamplers: Strings;
+	/**Hammered notes */
+	_stringsOutput: Tone.Volume;
+	/**The sustained notes */
+	_sustainedNotes: Map<any, any>;
+	harmonics: any;
+	keybed: any;
+	output(output: any): any {
+		throw new Error("Method not implemented.");
+	}
+	pedal: any;
+	strings: any;
+	
 	constructor(){
 
-		const options = Tone.defaults(arguments, ['velocities'], {
+		const options : ToneOptions = Tone.defaults(arguments, ['velocities'], {
 			//one velocity
 			velocities : 1,
 			//full range 88 keys
@@ -37,45 +62,29 @@ export class Piano extends AudioNode {
 
 		this.createInsOuts(0, 1)
 
-		/**
-		 * If it's loaded or not
-		 */
+		
 		this._loaded = false
 		
-		/**
-		 * The currently held notes
-		 */
+		
 		this._heldNotes = new Map()
 
-		/**
-		 * The sustained notes
-		 */
+		
 		this._sustainedNotes = new Map()
 
-		/**
-		 * Hammered notes
-		 */
+		
 		this._stringsOutput = new Volume(options.volume.strings).connect(this.output)
 		this.strings = this._stringsOutput.volume
 		this._stringSamplers = new Strings(options).connect(this._stringsOutput)
 
-		/**
-		 * The pedal
-		 */
+		
 		this._pedalOutput = new Volume(options.volume.pedal).connect(this.output)
 		this.pedal = this._pedalOutput.volume
 		this._pedalSampler = new Pedal(options).connect(this._pedalOutput)
 
-		/**
-		 * The keybed release sound
-		 */
 		this._keybedOutput = new Volume(options.volume.keybed).connect(this.output)
 		this.keybed = this._keybedOutput.volume
 		this._keybedSampler = new Keybed(options).connect(this._keybedOutput)
 
-		/**
-		 * The string harmonics
-		 */
 		this._harmonicsOutput = new Volume(options.volume.harmonics).connect(this.output)
 		this.harmonics = this._harmonicsOutput.volume
 		this._harmonicsSampler = new Harmonics(options).connect(this._harmonicsOutput)
@@ -86,8 +95,8 @@ export class Piano extends AudioNode {
 	 */
 	async load(){
 		await Promise.all([
-			this._stringSamplers.load(), 
-			this._pedalSampler.load(), 
+			this._stringSamplers.load(),
+			this._pedalSampler.load(),
 			this._keybedSampler.load(),
 			this._harmonicsSampler.load()
 		])
