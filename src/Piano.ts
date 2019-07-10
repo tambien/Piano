@@ -56,7 +56,6 @@ export class Piano extends Tone.AudioNode {
 	output: Tone.ProcessingNode
 	
 	constructor(){
-		
 		const options: PianoOptions = Tone.defaults(arguments, ['velocities'], {
 			//one velocity
 			velocities : 1,

@@ -1,20 +1,22 @@
-import * as Tone from '../node_modules/tone/Tone'
+// import * as Tone from '../node_modules/tone/Tone'
+import * as Tone from 'tone'
 import Frequency from '../node_modules/tone/Tone/type/Frequency'
-// import Frequency from '../node_modules/tone/Tone/type/Type'
-import MIDI from '../node_modules/tone/Tone/type/MIDI'
-import Note from '../node_modules/tone/Tone/type/Type'
-import { Buffer } from 'tone'
-import { BufferSource } from '../node_modules/tone/tone'
-// import {Frequency} from "../node_modules/tone/Tone/type/Frequency";
+// import MIDI from '../node_modules/tone/Tone/type/MIDI'
+// import Note from '../node_modules/tone/Tone/type/Type'
+// import { Buffer } from 'tone'
+// import { BufferSource } from '../node_modules/tone/tone'
 // import * as Tone2 from '../node_modules/tone/tone'
 // const { BufferSource } = Tone2
 
-function noteToMidi(note: number): MIDI{
+function noteToMidi(note: Tone.Encoding.Note): Tone.Encoding.MIDI{
 	return Frequency(note).toMidi()
 }
 
-function midiToNote(midi: number): Note{
-	return Frequency(midi, 'midi').toNote()
+function midiToNote(midi: number): Tone.Encoding.Note{
+	let frequency = Frequency(midi, 'midi');
+	console.log('frequency: ',frequency);
+	debugger;
+	return frequency.toNote()
 }
 
 function midiToFrequencyRatio(midi: number):[number, number]{
@@ -30,8 +32,8 @@ function midiToFrequencyRatio(midi: number):[number, number]{
 	}
 }
 
-function createSource(buffer: Buffer):BufferSource{
-	return new BufferSource(buffer)
+function createSource(buffer: Tone.Buffer | AudioBuffer):Tone.BufferSource{
+	return new Tone.BufferSource(buffer)
 }
 
 function randomBetween(low: number, high: number):number{

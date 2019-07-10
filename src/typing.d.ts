@@ -12,3 +12,4 @@ declare interface PianoOptions extends AudioContext {
         harmonics: number
     }
 }
+// declare type Frequency = (val, units) =>

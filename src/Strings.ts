@@ -7,14 +7,11 @@ import { String } from './String'
  */
 export class Strings extends Tone.AudioNode {
 	
-	_velocities: any;
-	
-	_strings: any;
-	
+	output: Tone.ProcessingNode
+	_velocities: number[];
+	_strings: String[];
 	_activeNotes: Map<any, any>;
 	
-	output: Tone.ProcessingNode
-
 	constructor({ minNote, maxNote, velocities=1, samples='./audio/' }){
 		super()
 		this.createInsOuts(0, 1)
@@ -65,7 +62,7 @@ export class Strings extends Tone.AudioNode {
 		}
 	}
 
-	async load(){
+	async load(): Promise<void> {
 		await Promise.all(this._strings.map(s => s.load()))
 	}
 }

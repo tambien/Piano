@@ -23,6 +23,9 @@ describe('Piano', async () => {
 		const serverPrefix = `http://localhost:${PORT}/test`
 		const browser = await puppeteer.launch({
 			headless : true,
+			// devtools : true,
+			// slowMo : 500,
+			// pipe : true,
 			args : ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
 		})
 		const page = await browser.newPage()
@@ -53,7 +56,7 @@ describe('Piano', async () => {
 			})
 			return window.piano.load()
 		})
-		// await page.waitFor(100)
+		await page.waitFor(100)
 		const isLoaded = await page.evaluate(() => window.piano.loaded)
 		expect(isLoaded).to.be.true
 		await browser.close()
