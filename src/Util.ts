@@ -1,14 +1,14 @@
 import { Frequency } from 'tone'
 
-function noteToMidi(note){
+function noteToMidi(note: any){
 	return Frequency(note).toMidi()
 }
 
-function midiToNote(midi){
+function midiToNote(midi: any){
 	return Frequency(midi, 'midi').toNote()
 }
 
-function midiToFrequencyRatio(midi){
+function midiToFrequencyRatio(midi: number){
 	let mod = midi % 3
 	if (mod === 1){
 		return [midi - 1, Tone.intervalToFrequencyRatio(1)]
@@ -19,11 +19,11 @@ function midiToFrequencyRatio(midi){
 	}
 }
 
-function createSource(buffer){
+function createSource(buffer: any){
 	return new BufferSource(buffer)
 }
 
-function randomBetween(low, high){
+function randomBetween(low: number, high: number){
 	return Math.random() * (high - low) + low
 }
 

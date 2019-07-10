@@ -1,11 +1,11 @@
-import Tone, { AudioNode, Midi, Volume } from 'tone'
+import * as Tone from 'tone'
+const  { AudioNode, Midi, Volume } = Tone;
 import { Strings } from './Strings'
 import { Pedal } from './Pedal'
 import { Keybed } from './Keybed'
 import { Harmonics } from './Harmonics'
 
 /**
- *  @class Multisampled Grand Piano using [Salamander Piano Samples](https://archive.org/details/SalamanderGrandPianoV3)
  *  @extends {Tone}
  */
 export class Piano extends AudioNode {
@@ -39,19 +39,16 @@ export class Piano extends AudioNode {
 
 		/**
 		 * If it's loaded or not
-		 * @type {Boolean}
 		 */
 		this._loaded = false
 		
 		/**
 		 * The currently held notes
-		 * @type {Map}
 		 */
 		this._heldNotes = new Map()
 
 		/**
 		 * The sustained notes
-		 * @type {Map}
 		 */
 		this._sustainedNotes = new Map()
 
@@ -99,8 +96,6 @@ export class Piano extends AudioNode {
 
 	/**
 	 * If all the samples are loaded or not
-	 * @readOnly
-	 * @type {Boolean}
 	 */
 	get loaded(){
 		return this._loaded
@@ -110,9 +105,8 @@ export class Piano extends AudioNode {
 	 *  Put the pedal down at the given time. Causes subsequent
 	 *  notes and currently held notes to sustain.
 	 *  @param  {Time}  time  The time the pedal should go down
-	 *  @returns {Piano} this
 	 */
-	pedalDown(time){
+	pedalDown(time: Time): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 			if (!this._pedalSampler.isDown(time)){
@@ -125,9 +119,8 @@ export class Piano extends AudioNode {
 	/**
 	 *  Put the pedal up. Dampens sustained notes
 	 *  @param  {Time}  time  The time the pedal should go up
-	 *  @returns {Piano} this
 	 */
-	pedalUp(time){
+	pedalUp(time: Time): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 			if (this._pedalSampler.isDown(time)){
@@ -150,9 +143,8 @@ export class Piano extends AudioNode {
 	 *                                     to be MIDI
 	 *  @param  {NormalRange}  velocity  The velocity to play the note
 	 *  @param  {Time}  time      The time of the event
-	 *  @return  {Piano}  this
 	 */
-	keyDown(note, time=Tone.immediate(), velocity=0.8){
+	keyDown(note: string | number, time: Time=Tone.immediate(), velocity: NormalRange=0.8): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 
@@ -173,11 +165,8 @@ export class Piano extends AudioNode {
 
 	/**
 	 *  Release a held note.
-	 *  @param  {String|Number}  note      The note to stop
-	 *  @param  {Time}  time      The time of the event
-	 *  @return  {Piano}  this
 	 */
-	keyUp(note, time=Tone.immediate(), velocity=0.8){
+	keyUp(note: string | number, time: Time=Tone.immediate(), velocity=0.8): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 

@@ -23,6 +23,7 @@
 	"author": "Yotam Mann",
 	"license": "MIT",
 	"devDependencies": {
+		"@types/tone": "git://github.com/Tonejs/TypeScript.git",
 		"babel-core": "^6.26.3",
 		"babel-loader": "^7.1.4",
 		"chai": "^4.1.2",
