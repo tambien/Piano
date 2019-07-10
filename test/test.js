@@ -23,6 +23,7 @@ describe('Piano', async () => {
 		const serverPrefix = `http://localhost:${PORT}/test`
 		const browser = await puppeteer.launch({
 			headless : true,
+			// headless : false,
 			// devtools : true,
 			// slowMo : 500,
 			// pipe : true,

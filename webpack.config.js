@@ -1,12 +1,17 @@
 const path = require('path')
+const webpack = require('webpack')
+// https://webpack.js.org/configuration/
+const debug = process.argv.slice(2).includes('--debug')
 
-const commonConfig = {
-	mode : 'development',
+let commonConfig = {
+	// 'production' outputs readable (debuggable) code. 'development' obfuscates.
+	mode : debug ? 'production' : 'development',
 	entry : {
 		Piano : ['./temp/Piano.js'],
 	},
 	context : __dirname,
 	output : {
+		pathinfo : debug,
 		path : path.resolve(__dirname, 'build'),
 		filename : '[name].js',
 		library : 'Piano',
@@ -24,14 +29,31 @@ const commonConfig = {
 	},
 	module : {
 		rules : [
-			{ 
-				test : /\.js$/, 
-				exclude : /node_modules/, 
-				loader : 'babel-loader' 
+			{
+				test : /\.js$/,
+				exclude : /node_modules/,
+				loader : 'babel-loader'
 			}
 		]
 	},
 	devtool : 'source-map'
+}
+if (debug){
+	commonConfig = { 
+		...commonConfig, 
+		optimization : { 
+			minimize : false,
+			nodeEnv : 'production',
+			namedModules : true,
+			namedChunks : true,
+			moduleIds : 'named',
+			chunkIds : 'named',
+		},
+		plugins : [
+			new webpack.NamedModulesPlugin(),
+			new webpack.NamedChunksPlugin(),
+			new webpack.DefinePlugin({ 'process.env.NODE_ENV' : JSON.stringify('production') }),
+		] }
 }
 
 const pianoConfig = Object.assign({}, commonConfig, {
@@ -60,7 +82,7 @@ const pianoConfig = Object.assign({}, commonConfig, {
 			libraryExport : 'MidiPiano'
 		},
 	})
-	
+
 	module.exports = [pianoConfig, midikeyboardConfig]
 	*/
 module.exports = [pianoConfig]
