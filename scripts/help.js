@@ -4,8 +4,8 @@ const verbose = util.isInArgs('verbose')
 const { table } = require('table')
 let data = [
 	['', 'description'],
-	['help', 'Prints available commands and their description'],
-	['help:verbose', 'Same as "help" but displaying an "alias" column'],
+	['help', verbose?'Prints available commands and their description':'Prints this message'],
+	['help:verbose', verbose?'Prints this message':'Same as "help" but displaying an "alias" column'],
 	['compile', 'Compiles the .ts files in /src to .js files in /temp'],
 	['compile:watch', 'Same as "compile" but recompiles on file change'],
 	['build', 'Builds the .js files in /temp to a Piano.js in /build. Minimized.'],
@@ -23,6 +23,7 @@ let data = [
 	['test:mocha:debug', 'Same as "test:mocha" but opens a web browser and DevTools'],
 ]
 if (verbose){
+
 	const verboseData = ['alias',
 		'node scripts/help.js',
 		'node scripts/help.js -v',
