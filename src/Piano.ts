@@ -206,7 +206,6 @@ export class Piano extends Tone.AudioNode {
 	 *  Release a held note.
 	 */
 	keyUp(note: string|number, time: Tone.Encoding.Time = Tone.immediate(), velocity = 0.8): Piano{
-		console.log('keyUp typeof note: ', typeof note)
 		if (this.loaded){
 			time = this.toSeconds(time)
 			
