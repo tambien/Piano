@@ -14,11 +14,9 @@ function noteToMidi(note: Tone.Encoding.Note): Tone.Encoding.MIDI{
 
 function midiToNote(midi: number): Tone.Encoding.Note{
 	let frequency = Frequency(midi, 'midi');
-	console.log('frequency: ',frequency);
-	console.log('frequency: ',frequency);
-	console.log('frequency: ',frequency);
 	debugger;
-	return frequency.toNote()
+	let ret = frequency.toNote();
+	return ret
 }
 
 function midiToFrequencyRatio(midi: number):[number, number]{

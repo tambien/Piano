@@ -115,3 +115,5 @@ console.log('Where <command> can be:')
 const output = table(data)
 
 console.log(output)
+console.log('tip: place a "debugger" line in a ts file, run "compileAndBuild:watch:debug" in one terminal, then run "test:mocha:debug -- --grep <RegExp | string>" in another')
+
