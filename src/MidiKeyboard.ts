@@ -3,13 +3,13 @@ import WebMidi from '../node_modules/webmidi/webmidi.min.js'
 import { EventEmitter } from 'events'
 
 export class MidiKeyboard extends EventEmitter {
-	connectedDevices: Map<any, any>;
+	connectedDevices: Map<any, any>
 	
-	ready: Promise<unknown>;
+	ready: Promise<unknown>
 	
 	constructor(){
 		super()
-		debugger;
+		
 		this.connectedDevices = new Map()
 
 		this.ready = new Promise((done, error) => {
@@ -52,12 +52,11 @@ export class MidiKeyboard extends EventEmitter {
 
 	}
 	
-	emit(event: string | symbol, ...args): boolean {
+	emit(event: string | symbol, ...args): boolean{
 		throw new Error('Method not implemented.')
 	}
 
-
-	_removeListeners(event){
+	_removeListeners(event: { id: any }){
 		if (this.connectedDevices.has(event.id)){
 			const device = this.connectedDevices.get(event.id)
 			this.connectedDevices.delete(event.id)

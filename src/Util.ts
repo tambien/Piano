@@ -13,8 +13,8 @@ function noteToMidi(note: string): string{
 }
 
 function midiToNote(midi: number): string{
-	let frequency = Frequency(midi, 'midi');
-	let ret = frequency.toNote();
+	let frequency = Frequency(midi, 'midi')
+	let ret = frequency.toNote()
 	return ret
 }
 

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 const puppeteer = require('puppeteer')
 const path = require('path')
+const util = require('../scripts/util')
 const { expect } = require('chai')
 const StaticServer = require('static-server')
 
@@ -11,7 +12,8 @@ var server = new StaticServer({
 	cors : '*',
 })
 
-let debug = process.argv.includes('--dbg')
+const debug = process.argv.includes('--dbg')
+const slowMo = util.isInArgs('slowMo')
 console.log('args: ', process.argv.slice(2))
 
 describe('Piano', async () => {
@@ -33,6 +35,9 @@ describe('Piano', async () => {
 			devtools : true,
 			pipe : true,
 		}
+	}
+	if (slowMo){
+		launchOptions.slowMo = 750
 	}
 	console.log('Launching puppeteer with options: %o', launchOptions)
 	async function loadPage(url){

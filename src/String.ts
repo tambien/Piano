@@ -1,16 +1,16 @@
 import { getNotesUrl } from './Salamander'
-import * as Tone from 'tone';
+import * as Tone from 'tone'
 
 /**
  * A single velocity of strings
  */
 export class String extends Tone.AudioNode {
 	
-	_loaded: Promise<void>;
+	_loaded: Promise<void>
 	
-	_sampler: Tone.Sampler;
+	_sampler: Tone.Sampler
 	
-	output: Tone.Sampler;
+	output: Tone.Sampler
 	
 	constructor(notes:number[], velocity:number, baseUrl:string){
 		super()
@@ -39,7 +39,7 @@ export class String extends Tone.AudioNode {
 	}
 
 	triggerRelease(midi, note:number, ...args:any[]){
-		// TODO: in @types/tone, the sig of triggerRelease is (time?)=>this;
+		// TODO: in @types/tone, the sig of triggerRelease is (time?)=>this
 		//  in build/Piano.js it's (t, e)=>this
 		this._sampler.triggerRelease(midi, note, ...args)
 	}

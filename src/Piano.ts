@@ -166,7 +166,7 @@ export class Piano extends Tone.AudioNode {
 				// dampen each of the notes
 				this._sustainedNotes.forEach((t, note) => {
 					if (!this._heldNotes.has(note)){
-						this._stringSamplers.triggerRelease(note, time)
+						this._stringSamplers.triggerRelease(note, <number>time)
 					}
 				})
 				this._sustainedNotes.clear()
@@ -182,12 +182,13 @@ export class Piano extends Tone.AudioNode {
 	 *  @param velocity  The velocity to play the note
 	 *  @param time	  The time of the event
 	 */
-	keyDown(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity: number = 0.8): Piano{
+	keyDown(note: string|number, time: Tone.Encoding.Time = Tone.immediate(), velocity: number = 0.8): Piano{
+		console.log('keyDown typeof note: ', typeof note)
 		if (this.loaded){
 			time = this.toSeconds(time)
 			
 			if (Tone.isString(note)){
-				note = Math.round(Tone.Midi(<string>note))
+				note = Math.round(Tone.Midi(note))
 			}
 			
 			if (!this._heldNotes.has(note)){
@@ -204,12 +205,13 @@ export class Piano extends Tone.AudioNode {
 	/**
 	 *  Release a held note.
 	 */
-	keyUp(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity = 0.8): Piano{
+	keyUp(note: string|number, time: Tone.Encoding.Time = Tone.immediate(), velocity = 0.8): Piano{
+		console.log('keyUp typeof note: ', typeof note)
 		if (this.loaded){
 			time = this.toSeconds(time)
 			
 			if (Tone.isString(note)){
-				note = Math.round(Tone.Midi(<string>note))
+				note = Math.round(Tone.Midi(note))
 			}
 			
 			if (this._heldNotes.has(note)){
@@ -232,7 +234,9 @@ export class Piano extends Tone.AudioNode {
 					if (!this._sustainedNotes.has(note)){
 						this._sustainedNotes.set(note, time)
 					}
+					
 				} else {
+					
 					//release the string sound
 					this._stringSamplers.triggerRelease(note, time)
 					//trigger the harmonics sound

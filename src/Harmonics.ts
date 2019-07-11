@@ -5,11 +5,11 @@ import { randomBetween } from './Util'
 type HarmonicsOptions = { minNote: number, maxNote: number, release: boolean, samples: string }
 export class Harmonics extends Tone.AudioNode {
 	
-	_harmonicsSound: boolean;
+	_harmonicsSound: boolean
 	
-	_loaded: Promise<void>;
+	_loaded: Promise<void>
 	
-	_sampler: Tone.Sampler;
+	_sampler: Tone.Sampler
 	
 	output: Tone.ProcessingNode
 	
@@ -41,7 +41,7 @@ export class Harmonics extends Tone.AudioNode {
 		}
 	}
 
-	load(): Promise<void> {
+	load(): Promise<void>{
 		return this._loaded
 	}
 }

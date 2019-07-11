@@ -56,7 +56,8 @@ if (debug){
 			new webpack.NamedModulesPlugin(),
 			new webpack.NamedChunksPlugin(),
 			new webpack.DefinePlugin({ 'process.env.NODE_ENV' : JSON.stringify('production') }),
-		] }
+		]
+	}
 }
 
 const pianoConfig = Object.assign({}, commonConfig, {
@@ -72,20 +73,19 @@ const pianoConfig = Object.assign({}, commonConfig, {
 	},
 })
 
-/**
-	const midikeyboardConfig = Object.assign({}, commonConfig, {
-		entry : {
-			MidiPiano : ['./src/MidiPiano.js'],
-		},
-		output : {
-			path : path.resolve(__dirname, 'build'),
-			filename : '[name].js',
-			library : 'MidiPiano',
-			libraryTarget : 'umd',
-			libraryExport : 'MidiPiano'
-		},
-	})
+const midikeyboardConfig = Object.assign({}, commonConfig, {
+	entry : {
+		MidiKeyboard : ['./temp/MidiKeyboard.js'],
+	},
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'MidiKeyboard',
+		libraryTarget : 'umd',
+		libraryExport : 'MidiKeyboard'
+	},
+})
 
-	module.exports = [pianoConfig, midikeyboardConfig]
-	*/
-module.exports = [pianoConfig]
+module.exports = [pianoConfig, midikeyboardConfig]
+
+// module.exports = [pianoConfig];

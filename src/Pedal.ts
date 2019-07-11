@@ -12,7 +12,7 @@ export class Pedal extends Tone.AudioNode {
 	
 	_buffers: Tone.Buffers
 	
-	constructor({ samples, pedal }:{samples:string,pedal:boolean}){
+	constructor({ samples, pedal }:{samples:string, pedal:boolean}){
 		super()
 		this.createInsOuts(0, 1)
 
@@ -37,7 +37,7 @@ export class Pedal extends Tone.AudioNode {
 
 	}
 
-	load(): Promise<void> {
+	load(): Promise<void>{
 		return this._loaded
 	}
 
@@ -76,7 +76,7 @@ export class Pedal extends Tone.AudioNode {
 		this._playSample(time, 'up')
 	}
 
-	isDown(time:number): boolean {
+	isDown(time:number): boolean{
 		return time > this._downTime
 	}
 }
