@@ -19,7 +19,7 @@ export class Pedal extends Tone.AudioNode {
 		this._downTime = Infinity
 
 		this._currentSound = null
-
+		
 		this._pedalSound = pedal
 
 		if (this._pedalSound){
