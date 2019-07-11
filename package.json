@@ -19,7 +19,7 @@
 		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
 		"test": "npm run compileAndBuild && npm run test:mocha",
 		"test:debug": "npm run compileAndBuild:debug && npm run test:mocha:debug",
-		"test:mocha": "mocha test/test.js --timeout 3000",
+		"test:mocha": "mocha test/test.js --timeout 30000",
 		"test:mocha:debug": "npm run test:mocha -- --dbg --timeout 0"
 	},
 	"files": [

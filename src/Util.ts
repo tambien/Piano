@@ -8,13 +8,12 @@ import Frequency from '../node_modules/tone/Tone/type/Frequency'
 // import * as Tone2 from '../node_modules/tone/tone'
 // const { BufferSource } = Tone2
 
-function noteToMidi(note: Tone.Encoding.Note): Tone.Encoding.MIDI{
+function noteToMidi(note: string): string{
 	return Frequency(note).toMidi()
 }
 
-function midiToNote(midi: number): Tone.Encoding.Note{
+function midiToNote(midi: number): string{
 	let frequency = Frequency(midi, 'midi');
-	debugger;
 	let ret = frequency.toNote();
 	return ret
 }

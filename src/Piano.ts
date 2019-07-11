@@ -8,7 +8,20 @@ import { Harmonics } from './Harmonics'
 
 // const { Volume, Midi } = Tone
 // import {Volume as TVolume} from '../node_modules/tone/Tone/component/Volume'
-
+interface PianoOptions extends AudioContext {
+    velocities: number,
+    minNote: number,
+    maxNote: number,
+    release: boolean,
+    pedal: boolean,
+    samples: string,
+    volume: {
+        pedal: number,
+        strings: number,
+        keybed: number,
+        harmonics: number
+    }
+}
 /**
  *  @extends {Tone}
  */
@@ -130,6 +143,7 @@ export class Piano extends Tone.AudioNode {
 	 *  @param time  The time the pedal should go down
 	 */
 	pedalDown(time?: Tone.Encoding.Time): Piano{
+		
 		if (this.loaded){
 			time = this.toSeconds(time)
 			if (!this._pedalSampler.isDown(time)){
@@ -168,7 +182,7 @@ export class Piano extends Tone.AudioNode {
 	 *  @param velocity  The velocity to play the note
 	 *  @param time	  The time of the event
 	 */
-	keyDown(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity: Tone.Encoding.NormalRange = 0.8): Piano{
+	keyDown(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity: number = 0.8): Piano{
 		if (this.loaded){
 			time = this.toSeconds(time)
 			

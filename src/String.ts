@@ -1,5 +1,5 @@
 import { getNotesUrl } from './Salamander'
-import * as Tone from 'tone'
+import * as Tone from 'tone';
 
 /**
  * A single velocity of strings
@@ -12,8 +12,9 @@ export class String extends Tone.AudioNode {
 	
 	output: Tone.Sampler;
 	
-	constructor(notes, velocity, baseUrl){
+	constructor(notes:number[], velocity:number, baseUrl:string){
 		super()
+		
 		//create the urls
 		const urls = {}
 		notes.forEach(note => urls[note] = getNotesUrl(note, velocity))
@@ -33,11 +34,13 @@ export class String extends Tone.AudioNode {
 		return this._loaded
 	}
 
-	triggerAttack(...args){
-		this._sampler.triggerAttack(...args)
+	triggerAttack(midi, note:number, gain:number, ...args:any[]){
+		this._sampler.triggerAttack(midi, note, gain, ...args)
 	}
 
-	triggerRelease(...args){
-		this._sampler.triggerRelease(...args)
+	triggerRelease(midi, note:number, ...args:any[]){
+		// TODO: in @types/tone, the sig of triggerRelease is (time?)=>this;
+		//  in build/Piano.js it's (t, e)=>this
+		this._sampler.triggerRelease(midi, note, ...args)
 	}
 }

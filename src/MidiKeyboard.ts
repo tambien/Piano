@@ -9,7 +9,7 @@ export class MidiKeyboard extends EventEmitter {
 	
 	constructor(){
 		super()
-
+		debugger;
 		this.connectedDevices = new Map()
 
 		this.ready = new Promise((done, error) => {
