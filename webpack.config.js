@@ -1,8 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
+const { isInArgs } = require('./scripts/util')
 // https://webpack.js.org/configuration/
 const args = process.argv.slice(2)
-const debug = args.includes('--debug')
+const debug = isInArgs('debug')
 console.log('args: ', args, 'debug: ', debug)
 let commonConfig = {
 	// 'production' outputs readable (debuggable) code. 'development' obfuscates.

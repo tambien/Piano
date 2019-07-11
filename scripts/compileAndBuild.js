@@ -1,13 +1,15 @@
 /* eslint-disable no-console */
 const ts = require('typescript')
 const fs = require('fs')
+const { execSync } = require('child_process')
+
 const util = require('./util')
 util.extendConsole()
 
 function printUsage(){
 	const usage = [
 		'USAGE:',
-		'"npm run-script compileAndBuild" compiles ts files to js, then packs with webpack via "build" script',
+		'"npm run-script compileAndBuild" compiles src/*.ts to temp/*.js, runs "build" command, removes /temp dir before exit',
 		'"npm run-script compileAndBuild help" shows this message',
 		'"npm run-script compileAndBuild [-d, --debug, debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
 	]
@@ -19,7 +21,7 @@ function removeTempDir(){
 	fs.rmdirSync('temp')
 }
 
-function compile({ debug, watch }){
+function compile(debug){
 	console.log(`Called "compile" function, param "debug" is ${debug}`)
 	let compilerOptions
 	try {
@@ -64,9 +66,10 @@ function compile({ debug, watch }){
 			console.bgred(`** Error: "${obligatory}" is undefined, compilerOptions in tsconfig.json must specify it`)
 		}
 	}
-	if (missingKeys)
+	if (missingKeys){
 		process.exit()
-	
+	}
+
 	module = module.toUpperCase()
 	target = target.toUpperCase()
 
@@ -86,10 +89,10 @@ function compile({ debug, watch }){
 	program.emit()
 
 	console.green('Finished compiling ts files')
-	const wpcmd = `npm run-script build${debug ? ':debug' : ''}`
+	const wpcmd = `npm run build${debug ? ':debug' : ''}`
 	try {
 		console.underscore(`Executing "${wpcmd}"...`)
-		const { execSync } = require('child_process')
+
 		execSync(wpcmd, { encoding : 'utf8', stdio : 'inherit' })
 		console.green('Finished webpacking')
 	} catch (err){
@@ -103,21 +106,20 @@ function compile({ debug, watch }){
 }
 
 // const args = process.argv.slice(2)
-
-const watch = util.isInArgs('watch')
 const debug = util.isInArgs('debug')
 const help = util.isInArgs('help')
-console.log({ watch, debug, help }, 'args: ', process.argv)
+console.log({ debug, help }, 'args: ', process.argv)
 if (help){
 	printUsage()
 	process.exit()
 }
+
 let args = process.argv.slice(2)
-const invalidArg = args.filter(a => a).length !== [watch, debug, help].filter(a=>a).length
+const invalidArg = args.filter(a => a).length !== [debug, help].filter(a=>a).length
 if (invalidArg){
-	console.bgred(`At least one argument is invalid: ${args}`)
+	console.bgred(`At least one argument is invalid out of the following: ${args}`)
 	printUsage()
 	process.exit()
 }
-compile({ debug, watch })
+compile(debug)
 

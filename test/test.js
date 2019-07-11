@@ -31,7 +31,6 @@ describe('Piano', async () => {
 		launchOptions = {
 			...launchOptions,
 			devtools : true,
-			slowMo : 500,
 			pipe : true,
 		}
 	}
