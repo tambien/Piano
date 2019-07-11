@@ -15,6 +15,7 @@ function noteToMidi(note: Tone.Encoding.Note): Tone.Encoding.MIDI{
 function midiToNote(midi: number): Tone.Encoding.Note{
 	let frequency = Frequency(midi, 'midi');
 	console.log('frequency: ',frequency);
+	debugger;
 	return frequency.toNote()
 }
 

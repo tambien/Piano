@@ -1,21 +1,25 @@
 /* eslint-disable no-console */
 const ts = require('typescript')
 const fs = require('fs')
-require('./extendConsole')
+const util = require('./util')
+util.extendConsole()
+
 function printUsage(){
 	const usage = [
 		'USAGE:',
 		'"npm run-script compileAndBuild" compiles ts files to js, then packs with webpack via "build" script',
 		'"npm run-script compileAndBuild help" shows this message',
-		'"npm run-script compileAndBuild [debug, --debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
+		'"npm run-script compileAndBuild [-d, --debug, debug]" compiles ts files to js, then packs with webpack via "build:debug" script instead of "build" (false by default)'
 	]
 	console.log(usage.join('\n\t'))
 }
+
 function removeTempDir(){
-	fs.readdirSync('temp').forEach(f=>fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
+	fs.readdirSync('temp').forEach(f => fs.unlinkSync(`temp/${f}`)) // rmdirSync => dir not empty
 	fs.rmdirSync('temp')
 }
-function compile(debug){
+
+function compile({ debug, watch }){
 	console.log(`Called "compile" function, param "debug" is ${debug}`)
 	let compilerOptions
 	try {
@@ -30,7 +34,7 @@ function compile(debug){
 				commentsInJson ? `comments are not allowed (${e.message.substr(e.message.indexOf('position'))}).` : e.message,
 				'Exiting'
 			]
-			console.yellow(strings.join(' '))
+			console.bgred(strings.join(' '))
 			process.exit()
 		} else {
 			throw e
@@ -39,7 +43,7 @@ function compile(debug){
 
 	console.log('compilerOptions: %O', compilerOptions)
 	if (!compilerOptions){
-		console.yellow('\t** Error, bad compilerOptions. Exiting')
+		console.bgred('\t** Error, bad compilerOptions. Exiting')
 		process.exit()
 	}
 
@@ -57,13 +61,12 @@ function compile(debug){
 	for (let [obligatory, value] of Object.entries({ module, outDir, target })){
 		if (value === undefined){
 			missingKeys = true
-			console.yellow(`** Warning: "${obligatory}" is undefined, compilerOptions in tsconfig.json must specify it`)
+			console.bgred(`** Error: "${obligatory}" is undefined, compilerOptions in tsconfig.json must specify it`)
 		}
 	}
-	if (missingKeys){
-		console.log('Exiting')
+	if (missingKeys)
 		process.exit()
-	}
+	
 	module = module.toUpperCase()
 	target = target.toUpperCase()
 
@@ -83,7 +86,7 @@ function compile(debug){
 	program.emit()
 
 	console.green('Finished compiling ts files')
-	const wpcmd = `npm run-script build${debug?':debug':''}`
+	const wpcmd = `npm run-script build${debug ? ':debug' : ''}`
 	try {
 		console.underscore(`Executing "${wpcmd}"...`)
 		const { execSync } = require('child_process')
@@ -99,21 +102,22 @@ function compile(debug){
 
 }
 
-const args = process.argv.slice(2)
+// const args = process.argv.slice(2)
 
-console.log('args: ', args)
-
-if (args[0]!==undefined){
-	if (args.includes('help')){
-		printUsage()
-		process.exit()
-	} if (args[0].includes('debug')){
-		compile(true)
-		process.exit()
-	}
-	console.yellow(`Unknown arguments: ${args}\nExiting`)
+const watch = util.isInArgs('watch')
+const debug = util.isInArgs('debug')
+const help = util.isInArgs('help')
+console.log({ watch, debug, help }, 'args: ', process.argv)
+if (help){
 	printUsage()
 	process.exit()
 }
-compile(false)
+let args = process.argv.slice(2)
+const invalidArg = args.filter(a => a).length !== [watch, debug, help].filter(a=>a).length
+if (invalidArg){
+	console.bgred(`At least one argument is invalid: ${args}`)
+	printUsage()
+	process.exit()
+}
+compile({ debug, watch })
 

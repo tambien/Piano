@@ -1,8 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 // https://webpack.js.org/configuration/
-const debug = process.argv.slice(2).includes('--debug')
-
+const args = process.argv.slice(2)
+const debug = args.includes('--debug')
+console.log('args: ', args, 'debug: ', debug)
 let commonConfig = {
 	// 'production' outputs readable (debuggable) code. 'development' obfuscates.
 	mode : debug ? 'production' : 'development',
@@ -35,13 +36,14 @@ let commonConfig = {
 				loader : 'babel-loader'
 			}
 		]
-	},
-	devtool : 'source-map'
+	}
+
 }
 if (debug){
-	commonConfig = { 
-		...commonConfig, 
-		optimization : { 
+	commonConfig = {
+		...commonConfig,
+		devtool : 'source-map',
+		optimization : {
 			minimize : false,
 			nodeEnv : 'production',
 			namedModules : true,
