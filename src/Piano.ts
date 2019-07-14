@@ -48,25 +48,25 @@ export class Piano extends Tone.AudioNode {
 
 	_pedalSampler: Pedal
 
-	_release: any
-
 	_stringSamplers: Strings
 
 	/**Hammered notes */
 	_stringsOutput: Tone.Volume
 
+	output: Tone.ProcessingNode
+	
+	strings: Tone.Param<number, number>
+	
+	pedal: Tone.Param<number, number>
+
+	harmonics: Tone.Param<number, number>
+
+	keybed: Tone.Param<number, number>
+
+	_release: boolean
+
 	/**The sustained notes */
 	_sustainedNotes: Map<any, any>
-
-	harmonics: any
-
-	keybed: any
-
-	pedal: any
-
-	strings: any
-
-	output: Tone.ProcessingNode
 
 	constructor(){
 		const options: PianoOptions = Tone.defaults(arguments, ['velocities'], {
