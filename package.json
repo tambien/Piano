@@ -48,7 +48,6 @@
 		"static-server": "^2.2.1",
 		"table": "^5.4.1",
 		"tone": "^13.8.18",
-		"ts-loader": "^6.0.4",
 		"typescript": "^3.5.3",
 		"webmidi": "^2.2.0",
 		"webpack": "^4.8.3",
