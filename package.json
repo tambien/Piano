@@ -1,18 +1,18 @@
 {
 	"name": "@tonejs/piano",
 	"version": "0.1.0",
-	"description": "detailed piano using Salamander samples",
+	"description": "Web Audio instrument using Salamander Grand Piano samples",
 	"main": "build/Piano.js",
 	"module": "build/esm/index.js",
 	"types": "build/esm/index.d.ts",
 	"scripts": {
 		"help": "node scripts/help.js",
 		"help:verbose": "node scripts/help.js -v",
-		"build": "rm -rf ./build && npm run build:webpack && npm run build:tsc",
-		"webpack:build": "webpack -p --mode=production",
-		"webpack:watch": "webpack -w --mode=development",
+		"build": "rm -rf ./build && npm run webpack:build && npm run tsc:build",
 		"tsc:build": "tsc -p tsconfig.json",
 		"tsc:watch": "tsc -p tsconfig.json --watch",
+		"webpack:build": "webpack -p --mode=production",
+		"webpack:watch": "webpack -w --mode=development",
 		"build:debug": "webpack --debug",
 		"build:watch:debug": "webpack -w --debug",
 		"compileAndBuild": "node scripts/compileAndBuild.js",
@@ -29,8 +29,7 @@
 	"files": [
 		"README.md",
 		"LICENSE",
-		"build/piano.js.map",
-		"build/piano.js",
+		"build",
 		"src",
 		"scripts"
 	],
