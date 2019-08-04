@@ -9,6 +9,7 @@
 		"help": "node scripts/help.js",
 		"help:verbose": "node scripts/help.js -v",
 		"build": "rm -rf ./build && npm run webpack:build && npm run tsc:build",
+		"prepare": "npm run build",
 		"tsc:build": "tsc -p tsconfig.json",
 		"tsc:watch": "tsc -p tsconfig.json --watch",
 		"webpack:build": "webpack -p --mode=production",
