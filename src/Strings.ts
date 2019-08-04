@@ -57,8 +57,6 @@ export class PianoStrings extends PianoComponent {
 			gain = velocity
 		}
 
-		console.log(gain, scaledVel, stringIndex)
-
 		const sampler = this._strings[stringIndex]
 
 		if (this._activeNotes.has(note)) {
