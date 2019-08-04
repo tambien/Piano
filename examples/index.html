@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Piano</title>
+	<script type="text/javascript" src="https://unpkg.com/@tonejs/midi"></script>
+	<script type="text/javascript" src="https://unpkg.com/tone@14.1.20"></script>
+	<script type="text/javascript" src="https://unpkg.com/webmidi"></script>
+	<script type="text/javascript" src="../build/Piano.js"></script>
+	<script type="text/javascript" src="../build/MidiKeyboard.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+</head>
+<body>
+	<style type="text/css">
+
+		body {
+			width: 100%;
+			height: auto;
+			max-width: 960px;
+			margin: auto;
+			margin-top: 80px;
+			font-family: monospace;
+			font-size: 1.25em;
+		}
+
+		a {
+			text-decoration: none;
+			font-weight: bold;
+			color: black;
+		}
+
+		a:hover {
+			color: blue;
+		}
+
+		#loading {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+		}
+
+		button {
+			border: 1px solid black;
+			display: block;
+			position: relative;
+			text-align: center;
+			width: 160px;
+			height: 50px;
+			pointer-events: none;
+			opacity: 0.5;
+			margin-left: auto;
+			margin-right: auto;
+			background-color: white;
+		}
+
+		button:hover {
+			background-color: #f0f;
+		}
+
+		button.active {
+			pointer-events: initial;
+			opacity: 1;
+		}
+
+		.description {
+			margin: 20px;
+		}
+
+		#volumes {
+			border: 1px solid black;
+			padding: 10px;
+			margin-top: 30px;
+			width: 140px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		#volumes input {
+			display: block;
+		}
+
+		h3 {
+			margin-top: 0px;
+		}
+
+	</style>
+	
+	<button>PLAY</button>
+	
+	<div id='loading'>
+		loading...
+	</div>
+
+	<div id="volumes">
+		<h3>volumes</h3>
+		<label for="strings">strings</label>
+		<input name="strings" type="range" min="-60" max="10" value="0">
+		<label for="harmonics">harmonics</label>
+		<input name="harmonics" type="range" min="-60" max="10" value="0">
+		<label for="pedal">pedal</label>
+		<input name="pedal" type="range" min="-60" max="10" value="0">
+		<label for="keybed">keybed</label>
+		<input name="keybed" type="range" min="-60" max="10" value="0">
+	</div>
+
+	<script>
+
+		const loadMidi = Midi.fromUrl('./clair_de_lune.mid')
+		const piano = new Piano({
+			samples : '../audio/',
+			release : true,
+			pedal : true,
+			velocities : 5,
+		}).toDestination()
+		const loadPiano = piano.load()
+		
+		loadMidi.then(midi => {
+
+			//schedule the pedal
+			const sustain = new Tone.Part((time, event) => {
+				if (event.value){
+					piano.pedalDown(time)
+				} else {
+					piano.pedalUp(time)
+				}
+			}, midi.tracks[0].controlChanges[64].map(cc => {
+				return {
+					time: cc.time,
+					value: cc.value
+				}
+			})).start(0)
+
+			const noteOffEvents = new Tone.Part((time, event) => {
+				piano.keyUp(event.note, time)
+			}, midi.tracks[0].notes.map(n => {
+				return {
+					note: n.name,
+					time: n.time + n.duration,
+				}
+			})).start(0)
+
+			const noteOnEvents = new Tone.Part((time, event) => {
+				piano.keyDown(event.note, time, event.velocity)
+				// piano.keyUp(event.note, time + event.duration)
+			}, midi.tracks[0].notes.map(n => {
+				return {
+					note: n.name,
+					velocity: n.velocity,
+					duration: n.duration,
+					time: n.time,
+				}
+			})).start(0)
+
+		})
+
+		document.querySelector('button').addEventListener('click', (e) => {
+			e.target.textContent = Tone.Transport.state === "started" ? "PLAY" : "STOP"
+			Tone.Transport.toggle()
+		})
+
+		document.querySelectorAll('input').forEach(input => {
+			input.addEventListener('input', e => {
+				piano[e.target.name].value = parseInt(e.target.value, 10)
+			})
+		})
+
+		Promise.all([loadMidi, loadPiano]).then(() => {
+			document.querySelector('#loading').remove()
+			document.querySelector('button').classList.add('active')
+		})
+
+		const keyboard = new MidiKeyboard()
+		keyboard.on('keyDown', (e, v) => piano.keyDown(e, undefined, v))
+		keyboard.on('keyUp', (e, v) => piano.keyUp(e, undefined, v))
+		keyboard.on('pedalDown', () => piano.pedalDown())
+		keyboard.on('pedalUp', () => piano.pedalUp())
+
+</script>
+</body>
+</html>

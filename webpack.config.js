@@ -1,51 +1,52 @@
-const webpack = require('webpack');
 const path = require('path')
+const webpack = require('webpack')
 
-module.exports = [{
-	context: __dirname,
-	entry: {Demo: ['babel-polyfill', './Demo']},
-	output: {
-		filename: './build/[name].js',
-		chunkFilename: './build/[id].js',
-		sourceMapFilename : '[file].map',
-	},
+const commonConfig = {
+	mode : 'production',
+	context : __dirname,
 	resolve : {
-		modules : ['node_modules']
+		extensions: ['.ts', '.js'],
 	},
-	module: {
-		loaders: [{
-			test: /\.js$/,
-			exclude: /(node_modules)|Tone\.js/,
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
+	externals : {
+		tone : 'Tone',
+		webmidi : 'WebMidi'
+	},
+	module : {
+		rules : [
+			{
+				test: /\.ts$/,
+				use: 'ts-loader',
+				exclude: /(node_modules)/,
 			}
-		}]
+		]
+	}
+
+}
+
+const pianoConfig = Object.assign({}, commonConfig, {
+	entry : {
+		Piano : ['./src/Piano.ts'],
 	},
-	devtool : '#source-map'
-}, {
-	context: __dirname + '/src',
-	entry: {Piano: './Piano'},
-	output: {
-		filename: './build/[name].js',
-		chunkFilename: './build/[id].js',
-		sourceMapFilename : '[file].map',
-		library: 'Piano',
-		libraryTarget: 'umd',
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'Piano',
+		libraryTarget : 'umd',
+		libraryExport : 'Piano'
 	},
-	resolve : {
-		modules : ['node_modules']
+})
+
+const midikeyboardConfig = Object.assign({}, commonConfig, {
+	entry : {
+		MidiKeyboard : ['./src/MidiKeyboard.ts'],
 	},
-	module: {
-		loaders: [{
-			test: /\.js$/,
-			exclude: /(node_modules)|Tone\.js/,
-			loader: 'babel-loader',
-			query: {
-				presets: ['es2015']
-			}
-		}]
+	output : {
+		path : path.resolve(__dirname, 'build'),
+		filename : '[name].js',
+		library : 'MidiKeyboard',
+		libraryTarget : 'umd',
+		libraryExport : 'MidiKeyboard'
 	},
-	externals: ['tone'],
-	devtool : '#source-map'
-}]
+})
+
+module.exports = [pianoConfig, midikeyboardConfig]

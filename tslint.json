@@ -1,0 +1,73 @@
+{
+	"extends": "tslint:recommended",
+	"rules": {
+		
+		"new-parens": true,
+		"no-arg": true,
+		"no-bitwise": true,
+		"no-conditional-assignment": true,
+		"no-consecutive-blank-lines": true,
+		"object-literal-sort-keys" : true,
+		"member-access" : false,
+		"member-ordering" : false,
+		"interface-name": false,
+        "arrow-parens" : false,
+        "semicolon": [true, "never"],
+		"typedef" : [
+			true,
+			"call-signature"
+		],
+		"one-line": [
+			true,
+			"check-catch",
+			"check-finally",
+			"check-else",
+			"check-whitespace"
+		],
+		"variable-name": [
+			true,
+			"allow-leading-underscore"
+		],
+		"quotemark": [
+			true,
+			"single",
+			"avoid-escape"
+		],
+		"indent": [
+			true,
+			"tabs"
+		],
+		"whitespace": [
+			true,
+			"check-decl",
+			"check-operator",
+			"check-module",
+			"check-separator",
+			"check-rest-spreak",
+			"check-type",
+			"check-typecast",
+			"check-type-operator",
+			"check-branch",
+			"check-operator",
+			"check-typecast"
+		],
+		"no-console": {
+			"severity": "warning",
+			"options": [
+				"debug",
+				"info",
+				"log",
+				"time",
+				"timeEnd",
+				"trace"
+			]
+        },
+        "no-unused-expression": false
+	},
+	"jsRules": {
+		"indent": [
+			true,
+			"tabs"
+		]
+	}
+}
