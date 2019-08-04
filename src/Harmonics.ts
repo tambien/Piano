@@ -1,47 +1,44 @@
-import * as Tone from 'tone'
-// import { Sampler, Midi, AudioNode } from 'tone'
+import { Midi, Sampler } from 'tone'
+import { PianoComponent, PianoComponentOptions, UrlsMap } from './Component'
 import { getHarmonicsInRange, getHarmonicsUrl, inHarmonicsRange } from './Salamander'
 import { randomBetween } from './Util'
-type HarmonicsOptions = { minNote: number, maxNote: number, release: boolean, samples: string }
-export class Harmonics extends Tone.AudioNode {
-	
-	_harmonicsSound: boolean
-	
-	_loaded: Promise<void>
-	
-	_sampler: Tone.Sampler
-	
-	output: Tone.ProcessingNode
-	
-	constructor({ minNote, maxNote, release, samples }:HarmonicsOptions){
-		super()
 
-		this.createInsOuts(0, 1)
+interface HarmonicsOptions extends PianoComponentOptions {
+	minNote: number
+	maxNote: number
+	release: boolean
+}
 
-		this._harmonicsSound = release
+export class Harmonics extends PianoComponent {
 
-		const urls = {}
-		const notes = getHarmonicsInRange(minNote, maxNote)
-		for (let n of notes){
-			urls[n] = getHarmonicsUrl(n)
-		}
+	private _sampler: Sampler
 
-		if (this._harmonicsSound){
-			this._loaded = new Promise(onload => {
-				this._sampler = new Tone.Sampler(urls, { onload, baseUrl : samples }).connect(this.output)
-			})
-		} else {
-			this._loaded = Promise.resolve()
+	private _urls: UrlsMap
+
+	constructor(options: HarmonicsOptions) {
+
+		super(options)
+
+		this._urls = {}
+		const notes = getHarmonicsInRange(options.minNote, options.maxNote)
+		for (const n of notes) {
+			this._urls[n] = getHarmonicsUrl(n)
 		}
 	}
 
-	triggerAttack(note:number, time:number, velocity:number){
-		if (this._harmonicsSound && inHarmonicsRange(note)){
-			this._sampler.triggerAttack(Tone.Midi(note), time, velocity * randomBetween(0.5, 1))
+	triggerAttack(note: number, time: number, velocity: number): void {
+		if (this._enabled && inHarmonicsRange(note)) {
+			this._sampler.triggerAttack(Midi(note).toNote(), time, velocity * randomBetween(0.5, 1))
 		}
 	}
 
-	load(): Promise<void>{
-		return this._loaded
+	protected _internalLoad(): Promise<void> {
+		return new Promise(onload => {
+			this._sampler = new Sampler({
+				baseUrl: this.samples,
+				onload,
+				urls : this._urls,
+			}).connect(this.output)
+		})
 	}
 }

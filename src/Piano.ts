@@ -1,131 +1,177 @@
-import * as Tone from 'tone'
-// import * as ToneStatic from '../node_modules/tone/Tone/core/Tone'
-// import AudioNode from '../node_modules/tone/Tone/core/AudioNode'
-import { Strings } from './Strings'
-import { Pedal } from './Pedal'
-import { Keybed } from './Keybed'
+import { Context, Gain, isString,
+	Midi, optionsFromArguments, Param,
+	ToneAudioNode, Unit, Volume } from 'tone'
 import { Harmonics } from './Harmonics'
+import { Keybed } from './Keybed'
+import { Pedal } from './Pedal'
+import { PianoStrings } from './Strings'
 
-// const { Volume, Midi } = Tone
-// import {Volume as TVolume} from '../node_modules/tone/Tone/component/Volume'
-interface PianoOptions extends AudioContext {
+interface PianoOptions {
+	/**
+	 * The audio context. Defaults to the global Tone audio context
+	 */
+	context: Context
+	/**
+	 * The number of velocity steps to load
+	 */
 	velocities: number,
+	/**
+	 * The lowest note to load
+	 */
 	minNote: number,
+	/**
+	 * The highest note to load
+	 */
 	maxNote: number,
+	/**
+	 * If it should include a 'release' sounds composed of a keyclick and string harmonic
+	 */
 	release: boolean,
+	/**
+	 * If the piano should include a 'pedal' sound.
+	 */
 	pedal: boolean,
+	/**
+	 * The directory of the salamander grand piano samples
+	 */
 	samples: string,
+
+	/**
+	 * Volume levelts for each of the components (in decibels)
+	 */
 	volume: {
 		pedal: number,
 		strings: number,
 		keybed: number,
-		harmonics: number
+		harmonics: number,
 	}
 }
+
 /**
- *  @extends {Tone}
+ *  The Piano
  */
-export class Piano extends Tone.AudioNode {
+export class Piano extends ToneAudioNode<PianoOptions> {
 
-	/**The string harmonics */
-	_harmonicsOutput: Tone.Volume
+	readonly name = 'Piano'
+	readonly input = undefined
+	readonly output = new Gain({context : this.context})
 
-	_harmonicsSampler: Harmonics
+	/**
+	 * The string harmonics
+	 */
+	private _harmonics: Harmonics
 
-	/** The currently held notes*/
-	_heldNotes: Map<any, any>
+	/**
+	 * The keybed release sound
+	 */
+	private _keybed: Keybed
 
-	/**The keybed release sound */
-	_keybedOutput: Tone.Volume
+	/**
+	 * The pedal
+	 */
+	private _pedal: Pedal
 
-	_keybedSampler: Keybed
+	/**
+	 * The strings
+	 */
+	private _strings: PianoStrings
 
-	/**If it's loaded or not */
-	_loaded: boolean
+	/**
+	 * The volume level of the strings output. This is the main piano sound.
+	 */
+	strings: Param<Unit.Decibels>
 
-	/**The pedal */
-	_pedalOutput: Tone.Volume
+	/**
+	 * The volume output of the pedal up and down sounds
+	 */
+	pedal: Param<Unit.Decibels>
 
-	_pedalSampler: Pedal
+	/**
+	 * The volume of the string harmonics
+	 */
+	harmonics: Param<Unit.Decibels>
 
-	_stringSamplers: Strings
+	/**
+	 * The volume of the keybed click sound
+	 */
+	keybed: Param<Unit.Decibels>
 
-	/**Hammered notes */
-	_stringsOutput: Tone.Volume
+	/**
+	 * The sustained notes
+	 */
+	private _sustainedNotes: Map<any, any>
 
-	output: Tone.ProcessingNode
-	
-	strings: Tone.Param<number, number>
-	
-	pedal: Tone.Param<number, number>
+	/**
+	 * The currently held notes
+	 */
+	private _heldNotes: Map<any, any> = new Map()
 
-	harmonics: Tone.Param<number, number>
+	/**
+	 * If it's loaded or not
+	 */
+	private _loaded: boolean = false
 
-	keybed: Tone.Param<number, number>
+	constructor(options?: Partial<PianoOptions>);
+	constructor() {
+		super(optionsFromArguments(Piano.getDefaults(), arguments))
 
-	_release: boolean
-
-	/**The sustained notes */
-	_sustainedNotes: Map<any, any>
-
-	constructor(){
-		const options: PianoOptions = Tone.defaults(arguments, ['velocities'], {
-			//one velocity
-			velocities : 1,
-			//full range 88 keys
-			minNote : 21,
-			maxNote : 108,
-			//default to no release sounds
-			release : false,
-			//include pedal sounds by default
-			pedal : true,
-			//the folder with all the piano samples
-			samples : './audio/',
-			//the initial volumes
-			volume : {
-				pedal : 0,
-				strings : 0,
-				keybed : 0,
-				harmonics : 0
-			}
-		})
-
-		super(options)
-
-		this.createInsOuts(0, 1)
-
-		this._loaded = false
+		const options = optionsFromArguments(Piano.getDefaults(), arguments)
 
 		this._heldNotes = new Map()
 
 		this._sustainedNotes = new Map()
 
-		this._stringsOutput = new Tone.Volume(options.volume.strings).connect(this.output)
-		this.strings = this._stringsOutput.volume
-		this._stringSamplers = new Strings(options).connect(this._stringsOutput)
+		this._strings = new PianoStrings(Object.assign({}, options, {
+			enabled: true,
+			volume : options.volume.strings,
+		})).connect(this.output)
+		this.strings = this._strings.volume
 
-		this._pedalOutput = new Tone.Volume(options.volume.pedal).connect(this.output)
-		this.pedal = this._pedalOutput.volume
-		this._pedalSampler = new Pedal(options).connect(this._pedalOutput)
+		this._pedal = new Pedal(Object.assign({}, options, {
+			enabled: options.pedal,
+			volume : options.volume.pedal,
+		})).connect(this.output)
+		this.pedal = this._pedal.volume
 
-		this._keybedOutput = new Tone.Volume(options.volume.keybed).connect(this.output)
-		this.keybed = this._keybedOutput.volume
-		this._keybedSampler = new Keybed(options).connect(this._keybedOutput)
+		this._keybed = new Keybed(Object.assign({}, options, {
+			enabled: options.release,
+			volume : options.volume.keybed,
+		})).connect(this.output)
+		this.keybed = this._keybed.volume
 
-		this._harmonicsOutput = new Tone.Volume(options.volume.harmonics).connect(this.output)
-		this.harmonics = this._harmonicsOutput.volume
-		this._harmonicsSampler = new Harmonics(options).connect(this._harmonicsOutput)
+		this._harmonics = new Harmonics(Object.assign({}, options, {
+			enabled: options.release,
+			volume : options.volume.harmonics,
+		})).connect(this.output)
+		this.harmonics = this._harmonics.volume
+	}
+
+	static getDefaults(): PianoOptions {
+		return Object.assign(ToneAudioNode.getDefaults(), {
+			maxNote : 108,
+			minNote : 21,
+			pedal : true,
+			release : false,
+			samples : './audio/',
+			velocities : 1,
+			volume : {
+				harmonics : 0,
+				keybed : 0,
+				pedal : 0,
+				strings : 0,
+			},
+		})
 	}
 
 	/**
 	 *  Load all the samples
 	 */
-	async load(): Promise<void>{
+	async load(): Promise<void> {
 		await Promise.all([
-			this._stringSamplers.load(),
-			this._pedalSampler.load(),
-			this._keybedSampler.load(),
-			this._harmonicsSampler.load()
+			this._strings.load(),
+			this._pedal.load(),
+			this._keybed.load(),
+			this._harmonics.load(),
 		])
 		this._loaded = true
 	}
@@ -133,7 +179,7 @@ export class Piano extends Tone.AudioNode {
 	/**
 	 * If all the samples are loaded or not
 	 */
-	get loaded(): boolean{
+	get loaded(): boolean {
 		return this._loaded
 	}
 
@@ -142,12 +188,12 @@ export class Piano extends Tone.AudioNode {
 	 *  notes and currently held notes to sustain.
 	 *  @param time  The time the pedal should go down
 	 */
-	pedalDown(time?: Tone.Encoding.Time): Piano{
+	pedalDown(time?: Unit.Time): this {
 
-		if (this.loaded){
+		if (this.loaded) {
 			time = this.toSeconds(time)
-			if (!this._pedalSampler.isDown(time)){
-				this._pedalSampler.down(time)
+			if (!this._pedal.isDown(time)) {
+				this._pedal.down(time)
 			}
 		}
 		return this
@@ -157,16 +203,16 @@ export class Piano extends Tone.AudioNode {
 	 *  Put the pedal up. Dampens sustained notes
 	 *  @param time  The time the pedal should go up
 	 */
-	pedalUp(time?: Tone.Encoding.Time): Piano{
+	pedalUp(time?: Unit.Time): this {
 
-		if (this.loaded){
-			time = this.toSeconds(time)
-			if (this._pedalSampler.isDown(time)){
-				this._pedalSampler.up(time)
+		if (this.loaded) {
+			const seconds = this.toSeconds(time)
+			if (this._pedal.isDown(seconds)) {
+				this._pedal.up(seconds)
 				// dampen each of the notes
 				this._sustainedNotes.forEach((t, note) => {
-					if (!this._heldNotes.has(note)){
-						this._stringSamplers.triggerRelease(note, <number>time)
+					if (!this._heldNotes.has(note)) {
+						this._strings.triggerRelease(note, seconds)
 					}
 				})
 				this._sustainedNotes.clear()
@@ -177,25 +223,23 @@ export class Piano extends Tone.AudioNode {
 
 	/**
 	 *  Play a note.
-	 *  @param note	  The note to play. If it is a number, it is assumed
-	 *									 to be MIDI
+	 *  @param note	  The note to play. If it is a number, it is assumed to be MIDI
 	 *  @param velocity  The velocity to play the note
 	 *  @param time	  The time of the event
 	 */
-	keyDown(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity: number = 0.8): Piano{
-		console.log('keyDown typeof note: ', typeof note)
-		if (this.loaded){
+	keyDown(note: string | number, time: Unit.Time = this.immediate(), velocity: number = 0.8): this {
+		if (this.loaded) {
 			time = this.toSeconds(time)
 
-			if (Tone.isString(note)){
-				note = Math.round(Tone.Midi(note))
+			if (isString(note)) {
+				note = Math.round(Midi(note).toMidi())
 			}
 
-			if (!this._heldNotes.has(note)){
-				//record the start time and velocity
+			if (!this._heldNotes.has(note)) {
+				// record the start time and velocity
 				this._heldNotes.set(note, { time, velocity })
 
-				this._stringSamplers.triggerAttack(note, time, velocity)
+				this._strings.triggerAttack(note, time, velocity)
 			}
 
 		}
@@ -205,51 +249,45 @@ export class Piano extends Tone.AudioNode {
 	/**
 	 *  Release a held note.
 	 */
-	keyUp(note: string | number, time: Tone.Encoding.Time = Tone.immediate(), velocity = 0.8): Piano{
-		if (this.loaded){
+	keyUp(note: string | number, time: Unit.Time = this.immediate(), velocity = 0.8): this {
+		if (this.loaded) {
 			time = this.toSeconds(time)
 
-			if (Tone.isString(note)){
-				note = Math.round(Tone.Midi(note))
+			if (isString(note)) {
+				note = Math.round(Midi(note).toMidi())
 			}
 
-			if (this._heldNotes.has(note)){
+			if (this._heldNotes.has(note)) {
 
 				const prevNote = this._heldNotes.get(note)
 				this._heldNotes.delete(note)
 
-				if (this._release){
-					this._release.start(note, time, velocity)
-				}
-
-				//compute the release velocity
+				// compute the release velocity
 				const holdTime = Math.pow(Math.max(time - prevNote.time, 0.1), 0.7)
 				const prevVel = prevNote.velocity
 				let dampenGain = (3 / holdTime) * prevVel * velocity
 				dampenGain = Math.max(dampenGain, 0.4)
 				dampenGain = Math.min(dampenGain, 4)
 
-				if (this._pedalSampler.isDown(time)){
-					if (!this._sustainedNotes.has(note)){
+				if (this._pedal.isDown(time)) {
+					if (!this._sustainedNotes.has(note)) {
 						this._sustainedNotes.set(note, time)
 					}
-
 				} else {
-
-					//release the string sound
-					this._stringSamplers.triggerRelease(note, time)
-					//trigger the harmonics sound
-					this._harmonicsSampler.triggerAttack(note, time, dampenGain)
+					// release the string sound
+					this._strings.triggerRelease(note, time)
+					// trigger the harmonics sound
+					this._harmonics.triggerAttack(note, time, dampenGain)
 				}
 
-				//trigger the keybed release sound
-				this._keybedSampler.start(note, time, velocity)
+				// trigger the keybed release sound
+				this._keybed.start(note, time, velocity)
 			}
 		}
 		return this
 	}
 
-	stopAll(){
+	stopAll(): this {
 		this.pedalUp()
 		this._heldNotes.forEach((value, note) => {
 			this.keyUp(note)

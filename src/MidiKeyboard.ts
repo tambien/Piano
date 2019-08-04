@@ -1,29 +1,27 @@
-/* eslint-disable no-console */
-import WebMidi from '../node_modules/webmidi/webmidi.min.js'
 import { EventEmitter } from 'events'
+import WebMidi, { Input } from 'webmidi'
 
 export class MidiKeyboard extends EventEmitter {
-	connectedDevices: Map<any, any>
-	
-	ready: Promise<unknown>
-	
-	constructor(){
+
+	private connectedDevices: Map<string, Input> = new Map()
+
+	readonly ready: Promise<unknown>
+
+	constructor() {
 		super()
-		
-		this.connectedDevices = new Map()
 
 		this.ready = new Promise((done, error) => {
 			WebMidi.enable((e) => {
-				if (e){
+				if (e) {
 					error(e)
 				}
-				WebMidi.addListener('connected', (e) => {
-					if (e.port.type === 'input'){
-						this._addListeners(e.port)
+				WebMidi.addListener('connected', (event) => {
+					if (event.port.type === 'input') {
+						this._addListeners(event.port)
 					}
 				})
-				WebMidi.addListener('disconnected', (e) => {
-					this._removeListeners(e.port)
+				WebMidi.addListener('disconnected', (event) => {
+					this._removeListeners(event.port)
 				})
 				done()
 			})
@@ -31,9 +29,9 @@ export class MidiKeyboard extends EventEmitter {
 
 	}
 
-	_addListeners(device){
+	private _addListeners(device: Input): void {
 
-		if (!this.connectedDevices.has(device.id)){
+		if (!this.connectedDevices.has(device.id)) {
 			this.connectedDevices.set(device.id, device)
 
 			device.addListener('noteon', 'all', (event) => {
@@ -44,27 +42,22 @@ export class MidiKeyboard extends EventEmitter {
 			})
 
 			device.addListener('controlchange', 'all', (event) => {
-				if (event.controller.name === 'holdpedal'){
+				if (event.controller.name === 'holdpedal') {
 					this.emit(event.value ? 'pedalDown' : 'pedalUp')
 				}
 			})
 		}
 
 	}
-	
-	emit(event: string | symbol, ...args): boolean{
-		throw new Error('Method not implemented.')
-	}
 
-	_removeListeners(event: { id: any }){
-		if (this.connectedDevices.has(event.id)){
+	private _removeListeners(event: { id: any }): void {
+		if (this.connectedDevices.has(event.id)) {
 			const device = this.connectedDevices.get(event.id)
 			this.connectedDevices.delete(event.id)
-			console.log('MidiKeyboard._removeListeners(event): removing: ', device)
 			device.removeListener('noteon')
 			device.removeListener('noteoff')
 			device.removeListener('controlchange')
-			
+
 		}
 	}
 }
