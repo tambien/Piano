@@ -159,7 +159,7 @@ describe('Piano', async () => {
 	})
 
 	it('can be used with Tone.js', async () => {
-		const { browser, page } = await loadPage('tone.html')
+		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(async () => {
 			const filter = new Tone.Filter().toMaster()
 			const piano = new Piano({
