@@ -1,6 +1,6 @@
 {
 	"name": "@tonejs/piano",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Web Audio instrument using Salamander Grand Piano samples",
 	"main": "build/Piano.js",
 	"module": "build/esm/index.js",
