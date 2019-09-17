@@ -1,6 +1,6 @@
 import { Context, Gain, isString,
 	Midi, optionsFromArguments, Param,
-	ToneAudioNode, Unit, Volume } from 'tone'
+	ToneAudioNode, Unit } from 'tone'
 import { Harmonics } from './Harmonics'
 import { Keybed } from './Keybed'
 import { Pedal } from './Pedal'
