@@ -1,68 +1,68 @@
 {
-  "name": "@tonejs/piano",
-  "version": "0.1.2",
-  "description": "Web Audio instrument using Salamander Grand Piano samples",
-  "repository": {
-    "url": "https://github.com/tambien/Piano"
-  },
-  "main": "build/Piano.js",
-  "module": "build/esm/Piano.js",
-  "types": "build/esm/Piano.d.ts",
-  "scripts": {
-    "help": "node scripts/help.js",
-    "help:verbose": "node scripts/help.js -v",
-    "build": "rm -rf ./build && npm run webpack:build && npm run tsc:build",
-    "prepare": "npm run build",
-    "tsc:build": "tsc -p tsconfig.json -d true",
-    "tsc:watch": "tsc -p tsconfig.json --watch",
-    "webpack:build": "webpack -p --mode=production",
-    "webpack:watch": "webpack -w --mode=development",
-    "build:debug": "webpack --debug",
-    "build:watch:debug": "webpack -w --debug",
-    "compileAndBuild": "node scripts/compileAndBuild.js",
-    "compileAndBuild:watch": "npm-run-all -p compile:watch build:watch",
-    "compileAndBuild:debug": "npm run compileAndBuild -- -d",
-    "compileAndBuild:watch:debug": "npm-run-all -p compile:watch build:watch:debug",
-    "increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
-    "lint": "tslint --project tsconfig.json --fix",
-    "test": "npm run webpack:build && npm run test:mocha",
-    "test:debug": "npm run compileAndBuild:debug && npm run test:mocha:debug",
-    "test:mocha": "mocha test/test.js --timeout 30000",
-    "test:mocha:debug": "npm run test:mocha -- --dbg --timeout 0"
-  },
-  "files": [
-    "README.md",
-    "LICENSE",
-    "build",
-    "src",
-    "scripts"
-  ],
-  "author": "Yotam Mann",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/node": "^12.6.2",
-    "chai": "^4.1.2",
-    "mocha": "^5.2.0",
-    "npm-run-all": "^4.1.5",
-    "puppeteer": "^1.19.0",
-    "semver": "^5.5.0",
-    "static-server": "^2.2.1",
-    "tone": "^14.3.32",
-    "ts-loader": "^6.0.4",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.3",
-    "webmidi": "^2.3.3",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9"
-  },
-  "peerDependencies": {
-    "tone": "^14.1.18",
-    "webmidi": "^2.3.3"
-  },
-  "keywords": [
-    "Web Audio",
-    "Tone.js",
-    "Piano",
-    "Sampler"
-  ]
+	"name": "@tonejs/piano",
+	"version": "0.1.1",
+	"description": "Web Audio instrument using Salamander Grand Piano samples",
+	"repository": {
+	  "url": "https://github.com/tambien/Piano"
+	},
+	"main": "build/Piano.js",
+	"module": "build/esm/Piano.js",
+	"types": "build/esm/Piano.d.ts",
+	"scripts": {
+		"help": "node scripts/help.js",
+		"help:verbose": "node scripts/help.js -v",
+		"build": "rm -rf ./build && npm run webpack:build && npm run tsc:build",
+		"prepare": "npm run build",
+		"tsc:build": "tsc -p tsconfig.json -d true",
+		"tsc:watch": "tsc -p tsconfig.json --watch",
+		"webpack:build": "webpack -p --mode=production",
+		"webpack:watch": "webpack -w --mode=development",
+		"build:debug": "webpack --debug",
+		"build:watch:debug": "webpack -w --debug",
+		"compileAndBuild": "node scripts/compileAndBuild.js",
+		"compileAndBuild:watch": "npm-run-all -p compile:watch build:watch",
+		"compileAndBuild:debug": "npm run compileAndBuild -- -d",
+		"compileAndBuild:watch:debug": "npm-run-all -p compile:watch build:watch:debug",
+		"increment": "npm version v$(semver --increment $(npm show @tonejs/piano version)) --git-tag-version=false --allow-same-version",
+		"lint": "tslint --project tsconfig.json --fix",
+		"test": "npm run webpack:build && npm run test:mocha",
+		"test:debug": "npm run compileAndBuild:debug && npm run test:mocha:debug",
+		"test:mocha": "mocha test/test.js --timeout 30000",
+		"test:mocha:debug": "npm run test:mocha -- --dbg --timeout 0"
+	},
+	"files": [
+		"README.md",
+		"LICENSE",
+		"build",
+		"src",
+		"scripts"
+	],
+	"author": "Yotam Mann",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^12.6.2",
+		"chai": "^4.1.2",
+		"mocha": "^5.2.0",
+		"npm-run-all": "^4.1.5",
+		"puppeteer": "^1.19.0",
+		"semver": "^5.5.0",
+		"static-server": "^2.2.1",
+		"tone": "^14.3.32",
+		"ts-loader": "^6.0.4",
+		"tslint": "^5.18.0",
+		"typescript": "^3.5.3",
+		"webmidi": "^2.3.3",
+		"webpack": "^4.40.2",
+		"webpack-cli": "^3.3.9"
+	},
+	"peerDependencies": {
+		"tone": "^14.1.18",
+		"webmidi": "^2.3.3"
+	},
+	"keywords": [
+		"Web Audio",
+		"Tone.js",
+		"Piano",
+		"Sampler"
+	]
 }
