@@ -6,9 +6,41 @@ Tone Piano is a Web Audio instrument which uses high-quality multi-sampled piano
 
 It has up to 16 velocity levels across 88 keys (sampled every third note) of a Yamaha C5. 
 
+## Install
+
+Install the npm package:
+
+```
+npm install --save @tonejs/piano
+```
+
+Tone Piano requires Tone.js as a peer dependency (and webmidi to use MidiKeyboard):
+
+```
+npm install --save tone
+# optional
+npm install --save webmidi
+```
+
+
 ## Usage
 
-Tone Piano requires Tone.js as a peer dependency. 
+### Import
+
+Using CommonJS:
+
+```js
+const Piano = require('@tonejs/piano');
+```
+
+Using ES6 modules:
+
+```js
+import { Piano } from '@tonejs/piano'
+```
+
+### Create and load samples
+
 
 ```javascript
 // create the piano and load 5 velocity steps
@@ -27,6 +59,8 @@ piano.load().then(() => {
 	console.log('loaded!')
 })
 ```
+
+## API reference
 
 Once the samples are loaded, it exposes 4 methods for playing the notes:
 
