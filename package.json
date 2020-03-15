@@ -2,15 +2,18 @@
 	"name": "@tonejs/piano",
 	"version": "0.1.1",
 	"description": "Web Audio instrument using Salamander Grand Piano samples",
+	"repository": {
+	  "url": "https://github.com/tambien/Piano"
+	},
 	"main": "build/Piano.js",
-	"module": "build/esm/index.js",
-	"types": "build/esm/index.d.ts",
+	"module": "build/esm/Piano.js",
+	"types": "build/esm/Piano.d.ts",
 	"scripts": {
 		"help": "node scripts/help.js",
 		"help:verbose": "node scripts/help.js -v",
 		"build": "rm -rf ./build && npm run webpack:build && npm run tsc:build",
 		"prepare": "npm run build",
-		"tsc:build": "tsc -p tsconfig.json",
+		"tsc:build": "tsc -p tsconfig.json -d true",
 		"tsc:watch": "tsc -p tsconfig.json --watch",
 		"webpack:build": "webpack -p --mode=production",
 		"webpack:watch": "webpack -w --mode=development",
