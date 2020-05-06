@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
-		"outDir": "./build/esm",
-		"target": "es5",
-		"module": "es2015",
+		"outDir": "./build",
+		"target": "es6",
+		"module": "es6",
 		"moduleResolution": "node",
-		"sourceMap": true,
+		"sourceMap": false,
+		"declaration": true,
 		"baseUrl": "./"
 	},
 	"include": [

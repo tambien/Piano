@@ -35,13 +35,13 @@ export class PianoString extends ToneAudioNode {
 	load(): Promise<void> {
 		return new Promise(onload => {
 			this._sampler = this.output = new Sampler({
-				attack : 0,
+				attack: 0,
 				baseUrl: this.samples,
-				curve : 'exponential',
+				curve: 'exponential',
 				onload,
-				release : 0.4,
+				release: 0.4,
 				urls: this._urls,
-				volume : 3,
+				volume: 3,
 			})
 		})
 	}

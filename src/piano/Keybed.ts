@@ -37,7 +37,7 @@ export class Keybed extends PianoComponent {
 	start(note: number, time: number, velocity: number): void {
 		if (this._enabled && this._buffers.has(note)) {
 			const source = new ToneBufferSource({
-				buffer: this._buffers.get(note),
+				url: this._buffers.get(note),
 				context: this.context,
 			}).connect(this.output)
 			// randomize the velocity slightly

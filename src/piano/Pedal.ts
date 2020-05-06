@@ -19,10 +19,10 @@ export class Pedal extends PianoComponent {
 	protected _internalLoad(): Promise<void> {
 		return new Promise((success) => {
 			this._buffers = new ToneAudioBuffers({
-				down1 : 'pedalD1.mp3',
-				down2 : 'pedalD2.mp3',
-				up1 : 'pedalU1.mp3',
-				up2 : 'pedalU2.mp3',
+				down1: 'pedalD1.mp3',
+				down2: 'pedalD2.mp3',
+				up1: 'pedalU1.mp3',
+				up2: 'pedalU2.mp3',
 			}, success, this.samples)
 		})
 	}
@@ -40,11 +40,11 @@ export class Pedal extends PianoComponent {
 	private _playSample(time: number, dir: 'down' | 'up'): void {
 		if (this._enabled) {
 			this._currentSound = new ToneBufferSource({
-				buffer: this._buffers.get(`${dir}${Math.random() > 0.5 ? 1 : 2}`),
+				url: this._buffers.get(`${dir}${Math.random() > 0.5 ? 1 : 2}`),
 				context: this.context,
 				curve: 'exponential',
 				fadeIn: 0.05,
-				fadeOut : 0.1,
+				fadeOut: 0.1,
 			}).connect(this.output)
 			this._currentSound.start(time, randomBetween(0, 0.01), undefined, 0.1 * randomBetween(0.5, 1))
 		}

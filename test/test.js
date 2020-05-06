@@ -7,9 +7,9 @@ const StaticServer = require('static-server')
 
 const PORT = 3000
 var server = new StaticServer({
-	rootPath : path.resolve(__dirname, '../'),
-	port : PORT,
-	cors : '*',
+	rootPath: path.resolve(__dirname, '../'),
+	port: PORT,
+	cors: '*',
 })
 
 const debug = process.argv.includes('--dbg')
@@ -26,35 +26,35 @@ describe('Piano', async () => {
 	})
 
 	let launchOptions = {
-		headless : !debug,
-		args : ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
+		headless: !debug,
+		args: ['--no-user-gesture-required', '--disable-web-security', '--allow-file-access-from-files'],
 	}
-	if (debug){
+	if (debug) {
 		launchOptions = {
 			...launchOptions,
-			devtools : true,
-			pipe : true,
+			devtools: true,
+			pipe: true,
 		}
 	}
-	if (slowMo){
+	if (slowMo) {
 		launchOptions.slowMo = 750
 	}
 	console.log('Launching puppeteer with options: %o', launchOptions)
-	async function loadPage(url){
+	async function loadPage(url) {
 		const serverPrefix = `http://localhost:${PORT}/test`
 		const browser = await puppeteer.launch(launchOptions)
 		const page = await browser.newPage()
 		page.on('pageerror', e => {
 			throw new Error(e)
 		})
-		await page.goto(`${serverPrefix}/${url}`, { waitFor : 'networkidle2' })
+		await page.goto(`${serverPrefix}/${url}`, { waitFor: 'networkidle2' })
 		return { page, browser }
 	}
 
 	it('can be created', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		const exists = await page.evaluate(() => {
-			const piano = new Piano()
+			const piano = new Tone.Piano()
 			return Boolean(piano)
 		})
 		expect(exists).to.be.true
@@ -64,10 +64,10 @@ describe('Piano', async () => {
 	it('can load only string sounds', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(() => {
-			window.piano = new Piano({
-				release : false,
-				pedal : false,
-				samples : '../audio/'
+			window.piano = new Tone.Piano({
+				release: false,
+				pedal: false,
+				samples: '../audio/'
 			})
 			return window.piano.load()
 		})
@@ -80,19 +80,19 @@ describe('Piano', async () => {
 	it('can set the volumes', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		const volumes = await page.evaluate(() => {
-			const piano = new Piano({
-				volume : {
-					harmonics : 10,
-					strings : 9,
-					keybed : 8,
-					pedal : 7
+			const piano = new Tone.Piano({
+				volume: {
+					harmonics: 10,
+					strings: 9,
+					keybed: 8,
+					pedal: 7
 				}
 			})
 			return {
-				harmonics : piano.harmonics.value,
-				strings : piano.strings.value,
-				keybed : piano.keybed.value,
-				pedal : piano.pedal.value,
+				harmonics: piano.harmonics.value,
+				strings: piano.strings.value,
+				keybed: piano.keybed.value,
+				pedal: piano.pedal.value,
 			}
 		})
 		expect(volumes.harmonics).to.be.closeTo(10, 0.1)
@@ -105,10 +105,10 @@ describe('Piano', async () => {
 	it('can schedule some notes', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(async () => {
-			const piano = new Piano({
-				release : true,
-				pedal : true,
-				samples : '../audio/'
+			const piano = new Tone.Piano({
+				release: true,
+				pedal: true,
+				samples: '../audio/'
 			})
 			await piano.load()
 			piano.keyDown('C4')
@@ -123,11 +123,11 @@ describe('Piano', async () => {
 	it('can play notes with velocities', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(async () => {
-			const piano = new Piano({
-				release : false,
-				pedal : false,
-				velocities : 3,
-				samples : '../audio/'
+			const piano = new Tone.Piano({
+				release: false,
+				pedal: false,
+				velocities: 3,
+				samples: '../audio/'
 			})
 			await piano.load()
 			piano.keyDown('C4', '+0.1', 0.9)
@@ -142,10 +142,10 @@ describe('Piano', async () => {
 	it('can stop all the scheduled notes', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(async () => {
-			const piano = new Piano({
-				release : false,
-				pedal : false,
-				samples : '../audio/'
+			const piano = new Tone.Piano({
+				release: false,
+				pedal: false,
+				samples: '../audio/'
 			})
 			await piano.load()
 			piano.keyDown('C4')
@@ -162,13 +162,12 @@ describe('Piano', async () => {
 		const { browser, page } = await loadPage('basic.html')
 		await page.evaluate(async () => {
 			const filter = new Tone.Filter().toMaster()
-			const piano = new Piano({
-				release : false,
-				pedal : false,
-				samples : '../audio/'
+			const piano = new Tone.Piano({
+				release: false,
+				pedal: false,
+				samples: '../audio/'
 			}).connect(filter)
 		})
 		await browser.close()
 	})
-
 })

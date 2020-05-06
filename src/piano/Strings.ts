@@ -34,7 +34,7 @@ export class PianoStrings extends PianoComponent {
 		this._strings = velocities.map(velocity => {
 			const string = new PianoString(Object.assign(options, {
 				notes, velocity,
-			}))
+			}));
 			return string
 		})
 
