@@ -14,12 +14,10 @@ Install the npm package:
 npm install --save @tonejs/piano
 ```
 
-Tone Piano requires Tone.js as a peer dependency (and webmidi to use MidiKeyboard):
+Tone Piano requires Tone.js as a peer dependency (and webmidi to use MidiInput):
 
 ```
-npm install --save tone
-# optional
-npm install --save webmidi
+npm install --save tone webmidi
 ```
 
 
