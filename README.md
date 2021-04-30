@@ -63,7 +63,7 @@ piano.load().then(() => {
 Once the samples are loaded, it exposes 4 methods for playing the notes:
 
 
-### `.keyDown(note: string, time?: Time, velocity?: number)`
+### `.keyDown({ note: string, time?: Time, velocity?: number })`
 
 Press a note down on the piano. Optionally give it a time using Tone.js time notation or seconds relative to the AudioContext clock.
 
@@ -71,22 +71,22 @@ The velocity is a value between 0-1.
 
 ```javascript
 //play a 'C4' 1 second from now
-piano.keyDown('C4', '+1')
+piano.keyDown({ note: 'C4', time: '+1' })
 ```
 
-### `.keyUp(note: string, time?: Time)`
+### `.keyUp({ note: string, time?: Time })`
 
 Release a note at the given time. 
 
 ```javascript
 //release the pressed 'C4' immediately
-piano.keyUp('C4')
+piano.keyUp({ note: 'C4' })
 ```
 
-### `.pedalDown(time?: Time)`
+### `.pedalDown({ time?: Time })`
 
 Press and hold the pedal starting at the given time. While the pedal is down, notes scheduled after the time will be sustained and released once the pedal is lifted.
 
-### `.pedalUp(time?: Time)`
+### `.pedalUp({ time?: Time })`
 
 Release the pedal and also dampen any notes which are currently sustained. 
