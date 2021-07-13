@@ -5,7 +5,7 @@
 	"repository": {
 	  "url": "https://github.com/tambien/Piano"
 	},
-	"main": "build/Piano.js",
+	"browser": "build/Piano.js",
 	"module": "build/esm/Piano.js",
 	"type": "module",
 	"types": "build/esm/Piano.d.ts",
