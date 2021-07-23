@@ -9,6 +9,7 @@
 	"main": "build/esm/Piano.js",
 	"module": "build/esm/Piano.js",
 	"type": "module",
+	"unpkg": "build/Piano.js",
 	"types": "build/esm/Piano.d.ts",
 	"scripts": {
 		"build": "tsc",
