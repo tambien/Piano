@@ -39,12 +39,12 @@
 		"semver": "^5.5.0",
 		"static-server": "^2.2.1",
 		"tone": "^14.6.1",
-		"ts-loader": "^7.0.1",
+		"ts-loader": "^9.4.2",
 		"tslint": "^5.18.0",
 		"typescript": "^3.8.3",
 		"webmidi": "^2.5.1",
-		"webpack": "^4.43.0",
-		"webpack-cli": "^3.3.11"
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.1"
 	},
 	"peerDependencies": {
 		"tone": "^14.6.1",
