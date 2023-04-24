@@ -259,9 +259,7 @@ export class Piano extends ToneAudioNode<PianoOptions> {
 
 			time = this.toSeconds(time)
 
-			if (isString(note)) {
-				midi = Math.round(Midi(note).toMidi())
-			}
+			midi = isString(note) ? Math.round(Midi(note).toMidi()) : note
 
 			if (!this._heldNotes.has(midi)) {
 				// record the start time and velocity
