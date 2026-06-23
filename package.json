@@ -1,6 +1,6 @@
 {
 	"name": "tonejs-salamander-piano",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "Web Audio instrument using Salamander Grand Piano samples",
 	"repository": {
 		"type": "git",

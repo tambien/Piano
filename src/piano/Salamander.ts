@@ -3,15 +3,15 @@ import { midiToNote } from './Util'
 export const githubURL = 'https://tambien.github.io/Piano/Salamander/'
 
 export function getReleasesUrl(midi: number): string {
-	return `rel${midi - 20}.[mp3|ogg]`
+	return `rel${midi - 20}.mp3`
 }
 
 export function getHarmonicsUrl(midi: number): string {
-	return `harmS${midiToNote(midi).replace('#', 's')}.[mp3|ogg]`
+	return `harmS${midiToNote(midi).replace('#', 's')}.mp3`
 }
 
 export function getNotesUrl(midi: number, vel: any): string {
-	return `${midiToNote(midi).replace('#', 's')}v${vel}.[mp3|ogg]`
+	return `${midiToNote(midi).replace('#', 's')}v${vel}.mp3`
 }
 
 /**
